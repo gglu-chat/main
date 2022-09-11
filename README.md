@@ -1,2 +1,2 @@
-# main
+# gglu chat
 a simple chat
