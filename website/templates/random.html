@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<title>随机数</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+    <style type="text/css">
+        body {max-width: 50em;margin: auto}
+    </style>
+</head>
+<body>
+    <h1>随机数生成器</h1>
+    <form action="" method="post" id="myform">
+        <fieldset>
+            <legend>请输入随机数的范围:[a, b]</legend>
+            <label>a:</label>
+            <input type="text" name="a" value="" autocomplete="off"><br>
+            <label>b:</label>
+            <input type="text" name="b" value="" autocomplete="off">
+        </fieldset>
+        <br>
+        <input type="submit" value="生成此范围的随机数">
+    </form>
+{% if r %}
+    <p>您生成的随机数：{{ r }}</p>
+{% endif %}
+</body>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+        <link id="colorscheme-link" rel="stylesheet" href="../static/color_scheme/fresh-green.css" type="text/css">
+        <title>chatroom</title>
+        <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+    </head>
+    <body>
+        <select id="colorscheme-selector" style="position: fixed; right: 0em;">
+            <option value="fresh-green">fresh-green</option>
+            <option value="night-dark">night-dark</option>
+        </select>
+        <article id="chatarea">
+            <div id="brick" style="height: 50px;"></div>
+        </article>
+        <div>
+            <!--<button id="send" style="position: fixed;">send</button>-->
+            <textarea id="chatbox" type="text" autocomplete="off" autofocus style="height: 45px; position: fixed; bottom: 0; width: 100%;"></textarea>
+        </div>
+        <script src="../static/chat.js"></script>
+    </body>
+</html>

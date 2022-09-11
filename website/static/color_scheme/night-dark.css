@@ -1,0 +1,11 @@
+body {
+    max-width: 50em;
+    margin: auto;
+    background-color: #333333;
+    color: #dadada;}
+#chatbox {
+    background-color: #353535cc;
+}
+textarea {
+    color:#dadada
+}
