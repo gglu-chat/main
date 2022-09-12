@@ -48,7 +48,11 @@ def disconnect():
 @socketio.on('join', namespace='/chat')
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
-    emit('joinchat', dt, broadcast=True)
+    password = dt['password']
+    sha256 = hashlib.sha256()
+    sha256.update(password.encode() + salt)
+    trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
+    emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip}, broadcast=True)
     user_dict[request.sid] = dt['nick']
 
 
@@ -63,15 +67,6 @@ def handle_message(arg):
     arg = json.loads(str(json.dumps(arg)))
     emit('send', arg, broadcast=True)
     #print(arg)
-
-@socketio.on('handle_password', namespace='/chat')
-def handle_password(args):
-    args = json.loads(str(json.dumps(args)))
-    password = args['password']
-    sha256 = hashlib.sha256()
-    sha256.update(password.encode() + salt)
-    trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
-    emit('addtrip', {'yourtrip': trip}, broadcast=True)
 
 
 if __name__ == '__main__':
