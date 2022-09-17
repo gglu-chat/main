@@ -5,6 +5,7 @@ import json
 import random
 import hashlib
 import base64
+import time
 
 app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
@@ -65,6 +66,8 @@ def leave(datas):
 @socketio.on('message', namespace='/chat')
 def handle_message(arg):
     arg = json.loads(str(json.dumps(arg)))
+    arg['time'] = int(round(time.time() * 1000))
+    arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     emit('send', arg, broadcast=True)
     #print(arg)
 

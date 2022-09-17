@@ -71,9 +71,13 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 var text = document.createTextNode(arg.trip + ' ' + arg.mynick + '：' + arg.mytext);
                 var chatarea = document.getElementById('chatarea');
                 var brick = document.getElementById('brick');
-                recvbox.appendChild(text);
-                chatarea.insertBefore(recvbox, brick)
-                window.scrollTo(0, document.body.scrollHeight)
+                if (arg.msg_id != msg_id){
+                    recvbox.appendChild(text);
+                    chatarea.insertBefore(recvbox, brick)
+                    window.scrollTo(0, document.body.scrollHeight)
+                }
+                msg_id = arg.msg_id
+
             })
         })
         socket.on('leavechat', function(datas){
