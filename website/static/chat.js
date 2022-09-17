@@ -32,7 +32,7 @@ document.getElementById('colorscheme-selector').onchange = function(e){
     setColorScheme(e.target.value);
 }
    
-
+var trip = 'NOTRIP'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(data){
         socket.emit('join', {"type": "join", "nick": nick, "password": password});
@@ -42,7 +42,9 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.appendChild(document.createTextNode('◆ 在线的用户：'+data.onlineUsers + ',' + nick));
         chatarea.insertBefore(recvbox, brick)
         socket.on('joinchat', function(dt){
-            var trip = dt.trip
+            if (dt.nick == nick){
+                trip = dt.trip
+            }
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')    
