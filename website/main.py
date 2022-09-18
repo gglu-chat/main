@@ -17,19 +17,7 @@ user_dict = {}
 
 @app.route('/')
 def index():
-    return "hello world"
-
-@app.route('/random', methods=['POST', 'GET'])
-def randomkit():
-    r = None
-    if request.method == 'POST':
-        try:
-            aa = int(request.form['a'])
-            bb = int(request.form['b'])
-            r = random.randint(aa, bb)
-        except ValueError:
-            flash('请输入正确格式的数字！')
-    return render_template('random.html', r = r)
+    return render_template('index.html')
 
 @app.route('/chat')
 def chat():
