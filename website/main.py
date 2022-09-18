@@ -11,8 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, logger=True, engineio_logger=True)
-with open('/etc/secrets/salt.txt', 'rb') as file:
-    salt = file.read()
+salt = os.environ.get('SALT')
 
 user_dict = {}
 
