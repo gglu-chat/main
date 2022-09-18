@@ -32,4 +32,4 @@ ENTRYPOINT [ "/render/setup-env" ]
 # defined in the app's Procfile during build.
 CMD [ "/render/process/web" ]
 
-RUN --mount=type=secret,id=salt,dst=/etc/secrets/salt
+RUN --mount=type=secret,id=salt.txt,dst=/etc/secrets/salt.txt
