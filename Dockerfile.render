@@ -31,3 +31,5 @@ ENTRYPOINT [ "/render/setup-env" ]
 # process type name in the CMD line below. That process type must have been
 # defined in the app's Procfile during build.
 CMD [ "/render/process/web" ]
+
+RUN --mount=type=secret,id=salt,dst=/etc/secrets/salt
