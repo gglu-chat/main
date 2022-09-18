@@ -18,7 +18,7 @@ FROM ghcr.io/renderinc/heroku-app-runner:${HEROKU_STACK} AS runner
 COPY --from=builder --chown=1000:1000 /render /render/
 COPY --from=builder --chown=1000:1000 /app /app/
 
-RUN --mount=type=secret,id=salt.txt,dst=/etc/secrets/salt.txt
+RUN --mount=type=secret,id=salt.txt,dst=/etc/secrets/salt.txt cat /etc/secrets/salt.txt
 
 
 # Switch to non-root user
