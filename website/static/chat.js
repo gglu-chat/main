@@ -33,6 +33,7 @@ document.getElementById('colorscheme-selector').onchange = function(e){
 }
    
 var trip = 'NOTRIP'
+var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(data){
         socket.emit('join', {"type": "join", "nick": nick, "password": password});
