@@ -1,4 +1,3 @@
-# syntax = docker/dockerfile:1.2
 # "v2-" stacks use our new, more rigorous buildpacks management system. They
 # allow you to use multiple buildpacks in a single application, as well as to
 # use custom buildpacks. We do not support using the original stack images with
@@ -17,9 +16,6 @@ FROM ghcr.io/renderinc/heroku-app-runner:${HEROKU_STACK} AS runner
 # Copy build artifacts to runtime image
 COPY --from=builder --chown=1000:1000 /render /render/
 COPY --from=builder --chown=1000:1000 /app /app/
-
-RUN --mount=type=secret,id=salt.txt,dst=/etc/secrets/salt.txt
-
 
 # Switch to non-root user
 USER 1000:1000
