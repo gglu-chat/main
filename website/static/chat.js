@@ -1,5 +1,3 @@
-const WebSocketConnection = require("websocket/lib/WebSocketConnection");
-
 /*
     不用看啦我写得很烂q-q
 */
