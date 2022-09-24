@@ -73,7 +73,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                     // 昵称部分
                     var nick_box = document.createElement('a');
                     nick_box.classList.add('nick')
-                    nick_box.title = arg.trip + '\n' + arg.time
+                    nick_box.title = 'trip:' + arg.trip + '\n' + arg.time
                     var your_nick = document.createTextNode(arg.mynick);
                     nick_box.append(your_nick)
                     //消息部分

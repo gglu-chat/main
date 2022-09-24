@@ -2,3 +2,7 @@ body {
     max-width: 50em;
     margin: auto;
 }
+.message {
+    word-wrap: break-word;
+    padding-bottom: 0.4em;
+}
