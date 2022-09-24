@@ -9,3 +9,6 @@ body {
 textarea {
     color:#dadada
 }
+a:hover {
+    text-decoration: underline dotted #dadada;
+}

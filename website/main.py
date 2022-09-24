@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 import os
 import json
@@ -37,9 +37,12 @@ def disconnect():
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
     password = dt['password']
-    sha256 = hashlib.sha256()
-    sha256.update(password.encode() + salt)
-    trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
+    if password != '':
+        sha256 = hashlib.sha256()
+        sha256.update(password.encode() + salt)
+        trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
+    else:
+        trip = 'null'
     emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip}, broadcast=True)
     user_dict[request.sid] = dt['nick']
 

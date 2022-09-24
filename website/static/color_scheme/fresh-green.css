@@ -9,3 +9,6 @@ body {
 textarea {
     color: #404d29;
 }
+a:hover {
+    text-decoration: underline dotted darkolivegreen;
+}
