@@ -31,7 +31,12 @@ function setColorScheme(colorScheme){
 document.getElementById('colorscheme-selector').onchange = function(e){
     setColorScheme(e.target.value);
 }
-   
+
+// @someone 
+document.getElementsByClassName('nick').onclick = function(ev){
+    document.getElementById('chatbox').value += '@' + ev.target + ' '
+}
+
 var trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
