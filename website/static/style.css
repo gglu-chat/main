@@ -1,7 +1,7 @@
 body {
     max-width: 50em;
     margin: auto;
-    font-family: Consolas, 'Courier New', monospace
+    font-family: Consolas, 'Courier New', 'Microsoft YaHei', monospace
 }
 .message {
     word-wrap: break-word;
