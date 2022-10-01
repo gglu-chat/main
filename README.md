@@ -1,2 +1,2 @@
 # gglu chat
-a simple chat
+gglu-chat a simple web chat application using Flask-SocketIO.
