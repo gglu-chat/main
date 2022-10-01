@@ -35,6 +35,7 @@ document.getElementById('colorscheme-selector').onchange = function(e){
 // @someone 
 document.getElementsByClassName('nick').onclick = function(ev){
     document.getElementById('chatbox').value += '@' + ev.target + ' '
+    document.getElementById('chatbox').focus();
 }
 
 var trip = 'NOTRIP'
