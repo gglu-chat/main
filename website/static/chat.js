@@ -76,7 +76,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                     var recvbox = document.createElement('div');
                     recvbox.classList.add('message');
                     // 昵称部分
-                    var nick_box = document.createElement('span');
+                    var nick_box = document.createElement('a');
                     nick_box.classList.add('nick')
                     nick_box.classList.add('hint--bottom-right')
                     nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + arg.time)
