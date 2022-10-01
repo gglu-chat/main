@@ -1,6 +1,7 @@
 body {
     max-width: 50em;
     margin: auto;
+    font-family:Inter,ui-sans-serif,system-ui
 }
 .message {
     word-wrap: break-word;
