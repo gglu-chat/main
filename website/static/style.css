@@ -11,3 +11,10 @@ body {
 .nick {
     font-weight: 700;
 }
+textarea {
+    height: 48px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    resize: none;
+}
