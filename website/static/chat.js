@@ -14,16 +14,6 @@ else{
     var password = ''
 }
 
-
-    /* 用按钮发送
-   document.getElementById('send').onclick = function(ev){
-    var txt = document.getElementById('chatbox').value;
-    if (txt != '' && txt != ' '){
-        socket.emit('message', txt)
-    }
-   }
-   */
-
 var defaultColorScheme = 'fresh-green'
 function setColorScheme(colorScheme){
     document.getElementById('colorscheme-link').href = '../static/color_scheme/' + colorScheme + '.css';
