@@ -83,7 +83,6 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                         recvbox.appendChild(nick_box);
                         recvbox.appendChild(text);
                         chatarea.insertBefore(recvbox, brick)
-                        window.scrollTo(0, document.body.scrollHeight)
                     }
                     msg_id = arg.msg_id
 
