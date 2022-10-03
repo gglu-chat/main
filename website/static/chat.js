@@ -14,6 +14,7 @@ else{
     var password = ''
 }
 
+/*
 var defaultColorScheme = 'fresh-green'
 function setColorScheme(colorScheme){
     document.getElementById('colorscheme-link').href = '../static/color_scheme/' + colorScheme + '.css';
@@ -21,6 +22,7 @@ function setColorScheme(colorScheme){
 document.getElementById('colorscheme-selector').onchange = function(e){
     setColorScheme(e.target.value);
 }
+*/
 
 var trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
