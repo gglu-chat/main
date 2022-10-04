@@ -28,6 +28,7 @@ textarea {
     background: none;
     border:3px #e3e3e3 dashed;
     outline: none;
+    background-color: #fffafa25;
 }
 article {
     -webkit-backdrop-filter: blur(5px);
