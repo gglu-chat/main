@@ -1,5 +1,5 @@
 body {
-    background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+    background-image: url("../default.png");
     color: #2f4f4f;}
 textarea {
     color: #2e294d;
