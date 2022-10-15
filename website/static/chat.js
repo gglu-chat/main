@@ -84,7 +84,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             //消息部分
-            var text = document.createTextNode(': ' + arg.mytext);
+            var text = document.createElement('div');
+            text.innerHTML = markdown.toHTML(arg.mytext)
 
             var chatarea = document.getElementById('chatarea');
             var brick = document.getElementById('brick');
