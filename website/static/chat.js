@@ -80,7 +80,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.classList.add('nick')
             nick_box.classList.add('hint--bottom-right')
             var date = new Date(arg.time)
-            nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date)
+            nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             //消息部分
