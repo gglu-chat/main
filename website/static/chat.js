@@ -51,7 +51,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         }
     });
 
-      socket.on('joinchat', function(dt){
+    socket.on('joinchat', function(dt){
         if (dt.nick == nick){
             trip = dt.trip
         }
@@ -100,6 +100,9 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             }
             msg_id = arg.msg_id
 
+            if (arg.mytext.includes('@' + nick)){
+                document.getElementById('notify').play();
+            }
         })
     })
     socket.on('leavechat', function(datas){
