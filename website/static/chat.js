@@ -4,19 +4,19 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/chat';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip, md;
+let nick, onlineUsers, password, trip, md, myNick;
 md = new remarkable.Remarkable('full', {
     html: false,
 	xhtmlOut: false,
 	breaks: true,
 	langPrefix: '',
-	//linkify: true,
 	linkTarget: '_blank" rel="noreferrer',
 	typographer:  true,
 	quotes: `""''`
 }).use(remarkable.linkify);
 
-nick = prompt('昵称：')
+myNick = window.localStorage['nick_and_password']
+nick = prompt('昵称：', myNick)
 if (nick.includes('#')){
     var well_index = nick.indexOf('#')
     password = nick.slice(well_index + 1)
@@ -32,6 +32,7 @@ var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(data){
         if (data.onlineUsers.indexOf(nick)===-1){
+            window.localStorage['nick_and_password'] = nick + '#' + password
             socket.emit('join', {"type": "join", "nick": nick, "password": password});
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
