@@ -16,6 +16,7 @@ body {
 }
 .nick {
     font-weight: 700;
+    color: #2f4f4f;
 }
 textarea {
     height: 50px;
