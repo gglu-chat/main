@@ -4,7 +4,18 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/chat';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip;
+let nick, onlineUsers, password, trip, md;
+md = new remarkable.Remarkable('full', {
+    html: false,
+	xhtmlOut: false,
+	breaks: true,
+	langPrefix: '',
+	//linkify: true,
+	linkTarget: '_blank" rel="noreferrer',
+	typographer:  true,
+	quotes: `""''`
+}).use(remarkable.linkify);
+
 nick = prompt('昵称：')
 if (nick.includes('#')){
     var well_index = nick.indexOf('#')
@@ -15,15 +26,6 @@ else{
     password = ''
 }
 
-/*
-var defaultColorScheme = 'fresh-green'
-function setColorScheme(colorScheme){
-    document.getElementById('colorscheme-link').href = '../static/color_scheme/' + colorScheme + '.css';
-}
-document.getElementById('colorscheme-selector').onchange = function(e){
-    setColorScheme(e.target.value);
-}
-*/
 
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
@@ -85,7 +87,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.append(your_nick)
             //消息部分
             var text = document.createElement('div');
-            text.innerHTML = markdown.toHTML(arg.mytext)
+            text.innerHTML = md.render(arg.mytext)
 
             var chatarea = document.getElementById('chatarea');
             var brick = document.getElementById('brick');
