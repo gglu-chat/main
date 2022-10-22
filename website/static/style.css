@@ -70,3 +70,15 @@ a {
     text-decoration: none;
     cursor: pointer;
 }
+blockquote {
+    padding: 3px 10px;
+    margin: 3px;
+    border-left: 5px solid #455656;
+}
+code {
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,.1);
+    border-radius: 3px;
+}
