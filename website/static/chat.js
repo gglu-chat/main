@@ -5,6 +5,7 @@ var ws_url = 'https://' + document.domain + ':' + location.port + '/chat';
 var socket = io.connect(ws_url);
 
 let nick, onlineUsers, password, trip, md, myNick;
+
 md = new remarkable.Remarkable('full', {
     html: false,
 	xhtmlOut: false,
@@ -26,6 +27,16 @@ else{
     password = ''
 }
 
+function insertAtCursor(text) {
+	var input = document.getElementById('chatbox');
+	var start = input.selectionStart || 0;
+	var before = input.value.substr(0, start);
+	var after = input.value.substr(start);
+
+	before += text;
+	input.value = before + after;
+	input.selectionStart = input.selectionEnd = before.length;
+}
 
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
@@ -103,6 +114,12 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             if (arg.mytext.includes('@' + nick)){
                 document.getElementById('notify').play();
             }
+
+            nick_box.onclick = function (e) {
+                insertAtCursor("@" + e.target.innerHTML + " ");
+                document.getElementById('chatbox').focus();
+            }
+
         })
     })
     socket.on('leavechat', function(datas){
