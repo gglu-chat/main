@@ -7,3 +7,6 @@ textarea {
 a:hover {
     text-decoration: underline dotted #2f4f4f;
 }
+.nick {
+    color: #2f4f4f;
+}

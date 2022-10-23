@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.7.0/hint.min.css">
         <title>chatroom</title>
         <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+        <script src="../static/vendor/remarkable.min.js"></script>
     </head>
     <body>
         <!--
@@ -17,6 +18,9 @@
             <option value="night-dark">night-dark</option>
         </select>
         -->
+        <audio style="display: none;" id="notify" preload="auto" src="../static/notify.mp3">
+            <source src="../static/notify.mp3" type="audio/ogg">
+        </audio>
         <div style="height: 2em;"></div>
         <article id="chatarea">
             <div id="brick" style="height: 4.5rem;"></div>
