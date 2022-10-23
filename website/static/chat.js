@@ -4,8 +4,20 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/chat';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip;
-nick = prompt('昵称：')
+let nick, onlineUsers, password, trip, md, myNick;
+
+md = new remarkable.Remarkable('full', {
+    html: false,
+	xhtmlOut: false,
+	breaks: true,
+	langPrefix: '',
+	linkTarget: '_blank" rel="noreferrer',
+	typographer:  true,
+	quotes: `""''`
+}).use(remarkable.linkify);
+
+myNick = window.localStorage['nick_and_password']
+nick = prompt('昵称：', myNick)
 if (nick.includes('#')){
     var well_index = nick.indexOf('#')
     password = nick.slice(well_index + 1)
@@ -15,21 +27,23 @@ else{
     password = ''
 }
 
-/*
-var defaultColorScheme = 'fresh-green'
-function setColorScheme(colorScheme){
-    document.getElementById('colorscheme-link').href = '../static/color_scheme/' + colorScheme + '.css';
+function insertAtCursor(text) {
+	var input = document.getElementById('chatbox');
+	var start = input.selectionStart || 0;
+	var before = input.value.substr(0, start);
+	var after = input.value.substr(start);
+
+	before += text;
+	input.value = before + after;
+	input.selectionStart = input.selectionEnd = before.length;
 }
-document.getElementById('colorscheme-selector').onchange = function(e){
-    setColorScheme(e.target.value);
-}
-*/
 
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(data){
         if (data.onlineUsers.indexOf(nick)===-1){
+            window.localStorage['nick_and_password'] = nick + '#' + password
             socket.emit('join', {"type": "join", "nick": nick, "password": password});
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
@@ -48,7 +62,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         }
     });
 
-      socket.on('joinchat', function(dt){
+    socket.on('joinchat', function(dt){
         if (dt.nick == nick){
             trip = dt.trip
         }
@@ -84,7 +98,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             //消息部分
-            var text = document.createTextNode(': ' + arg.mytext);
+            var text = document.createElement('div');
+            text.innerHTML = md.render(arg.mytext)
 
             var chatarea = document.getElementById('chatarea');
             var brick = document.getElementById('brick');
@@ -95,6 +110,15 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 chatarea.scrollTop = chatarea.scrollHeight
             }
             msg_id = arg.msg_id
+
+            if (arg.mytext.includes('@' + nick)){
+                document.getElementById('notify').play();
+            }
+
+            nick_box.onclick = function (e) {
+                insertAtCursor("@" + e.target.innerHTML + " ");
+                document.getElementById('chatbox').focus();
+            }
 
         })
     })
