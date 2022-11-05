@@ -8,6 +8,8 @@
 
 {% block head %}
     {{ super() }}
+    <meta name="keywords" content="聊天室, gglu, 在线聊天, flask, websocket, socketio, 文字聊天室, 匿名, bujijam">
+    <meta name="description" content="gglu聊天室是一个简洁轻型的聊天网站。">
     <style>html {
         height: 100%;
     }
@@ -36,8 +38,6 @@
     <h1>gglu聊天室</h1>
     <p>欢迎来到gglu聊天室，一个简单轻型的聊天网站。</p>
     <b>预设的聊天室：<a href="../room?chat">chat</a></b>
-    <p>您可以通过在url中输入或改变<code>room?房间名</code>来创建自己的聊天室。</p>
-    <p>当<code>room</code>后没有参数时，您将进入一个随机房间。</p>
     <p>为了您更好的聊天体验，请点击阅读：</p>
     <details>
         <summary>聊天室食用指南（简易版）</summary>
@@ -54,8 +54,9 @@
                 密码被呈现给服务器进行加密，取前6位作为您的识别码。识别码作为您唯一的身份标识，请不要随意把密码泄露给别人。</p>
         </details>
         <details>
-            <summary>聊天室规则</summary>
-            <p>不捣乱</p>
+            <summary>创建聊天室</summary>
+            <p>您可以通过在url中输入或改变<code>room?房间名</code>来创建自己的聊天室。
+               当<code>room</code>后没有参数时，您将进入一个随机房间。</p>        
         </details>
     </details>
     <p>站长邮箱：<a target="_blank" href="mailto://bujijam@qq.com/" title="邮箱">bujijam@qq.com</a></p>

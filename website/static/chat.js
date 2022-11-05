@@ -71,7 +71,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
-            if (dt.onlineUsers == null){
+            if (dt.onlineUsers.length == 0){
                 recvbox.appendChild(document.createTextNode('◆ 在线的用户：' + nick));
             }
             else{

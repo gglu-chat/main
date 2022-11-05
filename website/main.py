@@ -28,7 +28,7 @@ def getRoomUsers(room):
     for i in user_dict:
         if user_dict[i][1] == room:
             room_users.append(user_dict[i][0])
-        return room_users
+    return room_users
 
 @socketio.on('connect', namespace='/room')
 def connect(data):
