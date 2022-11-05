@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 import os
 import json
 import random
@@ -19,23 +19,30 @@ user_dict = {}
 def index():
     return render_template('index.html')
 
-@app.route('/chat')
+@app.route('/room')
 def chat():
     return render_template('chat.html')
 
-@socketio.on('connect', namespace='/chat')
-def connect(data):
-    emit('connected', {'info': 'connected:D', 'sid': request.sid, 'onlineUsers': list(user_dict.values())})
+def getRoomUsers(room):
+    room_users = []
+    for i in user_dict:
+        if user_dict[i][1] == room:
+            room_users.append(user_dict[i][0])
+        return room_users
 
-@socketio.on('disconnect', namespace='/chat')
-def disconnect():
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid]}, broadcast=True)
-    #print(user_dict[request.sid], '断开连接')
+@socketio.on('connect', namespace='/room')
+def connect(data):
+    emit('connected', {'info': 'connected:D', 'sid': request.sid})
+
+@socketio.on('disconnect', namespace='/room')
+def disconnects():
+    leave(user_dict[request.sid][1])
     user_dict.pop(request.sid)
 
-@socketio.on('join', namespace='/chat')
+@socketio.on('join', namespace='/room')
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
+    room = dt['room']
     password = dt['password']
     if password != '':
         sha256 = hashlib.sha256()
@@ -43,28 +50,31 @@ def join(dt):
         trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
     else:
         trip = 'null'
-    emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip}, broadcast=True)
-    user_dict[request.sid] = dt['nick']
+    join_room(room)
+    emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room)}, to=room)
+    nick_and_room = []
+    nick_and_room.append(dt['nick'])
+    nick_and_room.append(room)
+    user_dict[request.sid] = nick_and_room
+    #{'nBfbNBltuGT0DRmfAAAB': ['name', 'chat_room']}
 
 
-@socketio.on('leave', namespace='/chat')
+@socketio.on('leave', namespace='/room')
 def leave(datas):
-    disconnect()
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid]}, broadcast=True)
+    room = user_dict[request.sid][1]
+    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid][0]}, to=room)
+    leave_room(room)
 
-
-@socketio.on('message', namespace='/chat')
+@socketio.on('message', namespace='/room')
 def handle_message(arg):
     arg = json.loads(str(json.dumps(arg)))
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
-    emit('send', arg, broadcast=True)
+    room = arg['room']
+    emit('send', arg, to=room)
     #print(arg)
 
 
 if __name__ == '__main__':
-    #app.run(host="0.0.0.0",port=80)
     port = int(os.environ.get('PORT', 15264))
-    #server = pywsgi.WSGIServer(("0.0.0.0", port), app)
-    #server.serve_forever()
     socketio.run(app, host='0.0.0.0', port=port)

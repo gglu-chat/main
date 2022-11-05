@@ -26,7 +26,7 @@
         padding: .2em .4em;
         margin: 0;
         font-size: 85%;
-        background-color: rgba(27,31,35,.1);
+        background-color: rgba(27,31,35,.15);
         border-radius: 3px;
     }
     </style>
@@ -35,26 +35,27 @@
 {% block body%}
     <h1>gglu聊天室</h1>
     <p>欢迎来到gglu聊天室，一个简单轻型的聊天网站。</p>
-    <b><del>仅有的</del>预设的聊天室：<a href="../chat">chat</a></b>
+    <b>预设的聊天室：<a href="../room?chat">chat</a></b>
+    <p>您可以通过在url中输入或改变<code>room?房间名</code>来创建自己的聊天室。</p>
+    <p>当<code>room</code>后没有参数时，您将进入一个随机房间。</p>
     <p>为了您更好的聊天体验，请点击阅读：</p>
     <details>
         <summary>聊天室食用指南（简易版）</summary>
         <br/>
         <details>
             <summary>介绍</summary>
-            <p>gglu聊天室主要由Flask-SocketIO实现。</p>
-            <p>项目地址：<a href="https://github.com/gglu-chat/main" target="_blank">gglu-chat</a></p>
-            <p>支持markdown。</p>
+            <p>gglu聊天室主要由Flask-SocketIO实现。支持markdown。
+                项目地址：<a href="https://github.com/gglu-chat/main" target="_blank">gglu-chat</a></p>
         </details>
         <details>
             <summary>登录</summary>
-            <p>在这里您无需注册账户，输入一个昵称即可加入聊天室进行聊天。但是为了更好地识别用户，gglu使用tripcode（识别码）认证方式。</p>
-            <p>识别码是一串长度位6位的字符，您可以在加入聊天室输入昵称时输入<code>昵称#密码</code>来获得您的专属识别码。您可以将鼠标指针悬浮在昵称上，即可看到相应用户的识别码。</p>
-            <p>密码被呈现给服务器进行加密，取前6位作为您的识别码。识别码作为您唯一的身份标识，请不要随意把密码泄露给别人。</p>
+            <p>在这里您无需注册账户，输入一个昵称即可加入聊天室进行聊天。但是为了更好地识别用户，gglu使用tripcode（识别码）认证方式。
+                识别码是一串长度位6位的字符，您可以在加入聊天室输入昵称时输入<code>昵称#密码</code>来获得您的专属识别码。您可以将鼠标指针悬浮在昵称上，即可看到相应用户的识别码。
+                密码被呈现给服务器进行加密，取前6位作为您的识别码。识别码作为您唯一的身份标识，请不要随意把密码泄露给别人。</p>
         </details>
         <details>
             <summary>聊天室规则</summary>
-            <p>这里还什么都没有呢...</p>
+            <p>不捣乱</p>
         </details>
     </details>
     <p>站长邮箱：<a target="_blank" href="mailto://bujijam@qq.com/" title="邮箱">bujijam@qq.com</a></p>
