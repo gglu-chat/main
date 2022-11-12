@@ -35,6 +35,7 @@ catch(e){
     myRoom = getRandomString(8)
     window.location.assign('http://' + document.domain + ':' + location.port + '/room?' + myRoom)
 }
+document.title = '?' + myRoom + ' - gglu聊天室';
 
 function getRandomString(length){
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
