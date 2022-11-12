@@ -34,6 +34,7 @@ def getRoomUsers(room):
 def connect():
     emit('connected', {'info': 'connected:D', 'sid': request.sid})
     ip = request.headers.getlist("X-Forwarded-For")[0]
+    print(type(ip))
     print(ip)
 
 @socketio.on('disconnect', namespace='/room')
