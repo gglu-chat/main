@@ -33,7 +33,7 @@ def getRoomUsers(room):
 @socketio.on('connect', namespace='/room')
 def connect(data):
     emit('connected', {'info': 'connected:D', 'sid': request.sid})
-    ip = request.remote_addr
+    ip = request.headers.getlist("X-Forwarded-For")[0]
     print(ip)
 
 @socketio.on('disconnect', namespace='/room')
