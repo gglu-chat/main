@@ -15,6 +15,8 @@ salt = os.environ.get('SALT').encode()
 
 user_dict = {}
 
+ipsalt = os.urandom(32)
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -33,9 +35,6 @@ def getRoomUsers(room):
 @socketio.on('connect', namespace='/room')
 def connect():
     emit('connected', {'info': 'connected:D', 'sid': request.sid})
-    ip = request.headers.getlist("X-Forwarded-For")[0]
-    print(type(ip))
-    print(ip)
 
 @socketio.on('disconnect', namespace='/room')
 def disconnects():
@@ -57,9 +56,14 @@ def join(dt):
         trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
     else:
         trip = 'null'
+
+    ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
+    sha256.update(ip.encode() + ipsalt)
+    iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
+
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room)}, to=room)
+        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
         nickTaken()
         disconnect()
