@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
 import json
 import random
@@ -10,7 +10,7 @@ import time
 app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
 
 user_dict = {}
@@ -31,8 +31,7 @@ def getRoomUsers(room):
     return room_users
 
 @socketio.on('connect', namespace='/room')
-def connect(data):
-    emit('connected', {'info': 'connected:D', 'sid': request.sid})
+def connect():
     ip = request.headers.getlist("X-Forwarded-For")[0]
     print(ip)
 
@@ -40,6 +39,10 @@ def connect(data):
 def disconnects():
     leave(user_dict[request.sid][1])
     user_dict.pop(request.sid)
+
+@socketio.on('nick_taken', namespace='/room')
+def nickTaken():
+    emit('nickTaken', {"info": "◆ 昵称已被占用"})
 
 @socketio.on('join', namespace='/room')
 def join(dt):
@@ -52,8 +55,12 @@ def join(dt):
         trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
     else:
         trip = 'null'
-    join_room(room)
-    emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room)}, to=room)
+    if dt['nick'] not in getRoomUsers(room):
+        join_room(room)
+        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room)}, to=room)
+    else:
+        nickTaken()
+        disconnect()
     nick_and_room = []
     nick_and_room.append(dt['nick'])
     nick_and_room.append(room)

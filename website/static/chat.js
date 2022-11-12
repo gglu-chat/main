@@ -61,7 +61,7 @@ function insertAtCursor(text) {
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
-    socket.on('connected', function(data){
+    socket.on('connected', function(){
             window.localStorage['nick_and_password'] = nick + '#' + password
             socket.emit('join', {"type": "join", "nick": nick, "password": password, "room": myRoom});
     });
@@ -144,8 +144,21 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         chatarea.insertBefore(recvbox, brick);
     
     })
+
+    socket.on('nickTaken', function(args){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');   
+        recvbox.appendChild(document.createTextNode(args.info));
+        chatarea.insertBefore(recvbox, brick);
+    })
+
 }
 else{
     socket.disconnect();
-    alert('昵称只能包含字母、数字以及下划线，且长度不超过12');
+    var recvbox = document.createElement('div');
+    recvbox.classList.add('info');
+    var chatarea = document.getElementById('chatarea');   
+    recvbox.appendChild(document.createTextNode('◆ 昵称只能包含字母、数字以及下划线，且长度不超过12'));
+    chatarea.insertBefore(recvbox, brick);
 }
