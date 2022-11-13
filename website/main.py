@@ -89,15 +89,14 @@ def leave(datas):
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
-    iphash = g.iphash
     arg = json.loads(str(json.dumps(arg)))
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    #if not rl.frisk(iphash, 0):
-    emit('send', arg, to=room)
-    #else:
-        #ratelimit()
+    if not rl.frisk(g.iphash, 0):
+        emit('send', arg, to=room)
+    else:
+        ratelimit()
 
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
