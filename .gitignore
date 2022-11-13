@@ -130,3 +130,6 @@ dmypy.json
 
 # salt
 salt.txt
+
+# vscode
+.vscode/

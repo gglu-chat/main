@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, g
 from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
 import json
@@ -6,6 +6,7 @@ import random
 import hashlib
 import base64
 import time
+from ratelimiter import RateLimiter
 
 app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
@@ -16,6 +17,8 @@ salt = os.environ.get('SALT').encode()
 user_dict = {}
 
 ipsalt = os.urandom(32)
+
+rl = RateLimiter()
 
 @app.route('/')
 def index():
@@ -60,6 +63,8 @@ def join(dt):
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
+    g.iphash = iphash
+    rl.search(iphash)
 
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
@@ -82,11 +87,21 @@ def leave(datas):
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
+    iphash = g.iphash
     arg = json.loads(str(json.dumps(arg)))
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    emit('send', arg, to=room)
+    if not rl.frisk(iphash, 0):
+        emit('send', arg, to=room)
+    else:
+        ratelimit()
+
+@socketio.on('ratelimit', namespace='/room')
+def ratelimit():
+    iphash = g.iphash
+    rl.arrest(iphash, iphash)
+    emit('ratelimit', {"info": "您发送的频率太快了，请稍后再试"})
 
 
 if __name__ == '__main__':
