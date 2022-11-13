@@ -61,6 +61,7 @@ def join(dt):
         trip = 'null'
 
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
+    sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
