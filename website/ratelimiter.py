@@ -9,8 +9,9 @@ class RateLimiter:
         self.hashes = hashes
 
     def search(self, id):
-        record = self.records[id]
-        if not record:
+        try:
+            record = self.records[id]
+        except:
             self.records[id] = {'time': int(round(time.time() * 1000)), 'score': 0};
             record = self.records[id]
         return record
