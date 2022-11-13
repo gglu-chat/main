@@ -43,7 +43,7 @@ def disconnects():
 
 @socketio.on('nick_taken', namespace='/room')
 def nickTaken():
-    emit('nickTaken', {"info": "◆ 昵称已被占用"})
+    emit('nickTaken', {"info": "昵称已被占用"})
 
 @socketio.on('join', namespace='/room')
 def join(dt):
@@ -87,7 +87,6 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
     emit('send', arg, to=room)
-    #print(arg)
 
 
 if __name__ == '__main__':
