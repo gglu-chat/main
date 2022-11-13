@@ -12,7 +12,7 @@ class RateLimiter:
         try:
             record = self.records[id]
         except:
-            self.records[id] = {'time': int(round(time.time() * 1000)), 'score': 0};
+            self.records[id] = {'time': int(round(time.time() * 1000)), 'score': 0}
             record = self.records[id]
         return record
 
