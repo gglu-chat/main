@@ -65,7 +65,8 @@ def join(dt):
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
-    rl.search(iphash)
+    #rl.search(iphash)
+    print(g.iphash)
 
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
@@ -93,10 +94,10 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    if not rl.frisk(iphash, 0):
-        emit('send', arg, to=room)
-    else:
-        ratelimit()
+    #if not rl.frisk(iphash, 0):
+    emit('send', arg, to=room)
+    #else:
+        #ratelimit()
 
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
