@@ -45,20 +45,20 @@ def disconnects():
 def nickTaken():
     emit('nickTaken', {"info": "昵称已被占用"})
 
-sha256 = hashlib.sha256()
-
 @socketio.on('join', namespace='/room')
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
     room = dt['room']
     password = dt['password']
     if password != '':
+        sha256 = hashlib.sha256()
         sha256.update(password.encode() + salt)
         trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
     else:
         trip = 'null'
 
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
+    sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
 
