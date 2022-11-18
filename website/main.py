@@ -66,7 +66,7 @@ def join(dt):
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
     #rl.search(iphash)
-    print(g.iphash)
+    #print(g.iphash)
 
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
@@ -94,14 +94,14 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
     score = len(arg['mytext']) / 83 / 4
-    if not rl.frisk(g.iphash, score):
+    iph = g.iphash
+    if not rl.frisk(iph, score):
         emit('send', arg, to=room)
     else:
         ratelimit()
 
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
-    iphash = g.iphash
     emit('ratelimit', {"info": "您发送的频率太快了，请稍后再试"})
 
 
