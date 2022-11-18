@@ -8,16 +8,16 @@ class RateLimiter:
         self.threshold = threshold
         self.hashes = hashes
 
-    def search(self, id):
+    def search(self, id_):
         try:
-            record = self.records[id]
+            record = self.records[id_]
         except:
-            self.records[id] = {'time': int(round(time.time() * 1000)), 'score': 0}
-            record = self.records[id]
+            self.records[id_] = {'time': int(round(time.time() * 1000)), 'score': 0}
+            record = self.records[id_]
         return record
 
-    def frisk(self, id, deltaScore):
-        record = self.search(id)
+    def frisk(self, id_, deltaScore):
+        record = self.search(id_)
         if record['arrested']:
             return True
         record['score'] *= pow(2, -(int(round(time.time() * 1000)) - record['time']) / self.halflife)
@@ -27,13 +27,13 @@ class RateLimiter:
             return True
         return False
 
-    def arrest(self, id, hash):
-        record = self.search(id)
+    def arrest(self, id_, hash):
+        record = self.search(id_)
         record['arrested'] = True
-        self.hashes[hash] = id
+        self.hashes[hash] = id_
 
-    def pardon(self, id):
-        targetId = id
+    def pardon(self, id_):
+        targetId = id_
         try:
             type(self.hashes[targetId])
         except:
