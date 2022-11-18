@@ -93,7 +93,8 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    if not rl.frisk(g.iphash, 0):
+    score = len(arg['mytext']) / 83 / 4
+    if not rl.frisk(g.iphash, score):
         emit('send', arg, to=room)
     else:
         ratelimit()
@@ -101,7 +102,6 @@ def handle_message(arg):
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
     iphash = g.iphash
-    rl.arrest(iphash, iphash)
     emit('ratelimit', {"info": "您发送的频率太快了，请稍后再试"})
 
 
