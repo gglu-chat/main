@@ -23,8 +23,8 @@ class RateLimiter:
             if record['arrested']:
                 return True
         except:
-            record['score'] = record['score'] * (math.log(deltaScore) / (0.3 * min((int(round(time.time() * 1000)) - record['time']), 50) + 0.06)) + 0.5 * record['score'] + 1
-            record['time'] = int(round(time.time() * 1000))
+            record['score'] = record['score'] * (math.log(deltaScore) / (0.3 * min((time.time() - record['time']), 50) + 0.06)) + 0.5 * record['score'] + 1
+            record['time'] = time.time()
             if record['score'] >= self.threshold:
                 return True
         return False
