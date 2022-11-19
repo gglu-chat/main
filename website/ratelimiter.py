@@ -26,6 +26,11 @@ class RateLimiter:
             p = record['score']
             dltime = time.time() - record['time']
             record['score'] = (math.log(deltaScore) / (0.3 * min(dltime, 50) + 0.06)) * p + 0.5 * p + 1
+            print(p)
+            print(dltime)
+            print(math.log(deltaScore))
+            print(0.3 * min(dltime, 50) + 0.06)
+            print(record['score']
             if record['score'] >= self.threshold:
                 if dltime >= 120:
                     record['score'] = 25
