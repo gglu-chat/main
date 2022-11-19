@@ -13,7 +13,7 @@ class RateLimiter:
         try:
             record = self.records[id_]
         except:
-            self.records[id_] = {'time': int(round(time.time() * 1000)), 'score': 0}
+            self.records[id_] = {'time': time.time(), 'score': 0}
             record = self.records[id_]
         return record
 
@@ -23,10 +23,16 @@ class RateLimiter:
             if record['arrested']:
                 return True
         except:
-            record['score'] = record['score'] * (math.log(deltaScore) / (0.3 * min((time.time() - record['time']), 50) + 0.06)) + 0.5 * record['score'] + 1
-            record['time'] = time.time()
+            p = record['score']
+            dltime = time.time() - record['time']
+            record['score'] = (math.log(deltaScore) / (0.3 * min(dltime, 50) + 0.06)) * p + 0.5 * p + 1
             if record['score'] >= self.threshold:
+                if dltime >= 120:
+                    record['score'] = 25
+                    record['time'] = time.time()
+                    return False
                 return True
+        record['time'] = time.time()
         return False
 
     def arrest(self, id_, hash):
