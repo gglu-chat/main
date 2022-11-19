@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, g
 from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
 import json
@@ -64,7 +64,7 @@ def join(dt):
     sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
-    session['hash'] = iphash
+    g.iphash = iphash
     #rl.search(iphash)
     #print(g.iphash)
 
@@ -94,10 +94,10 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
     score = len(arg['mytext']) / 83 / 4
-    if not rl.frisk(session['iphash'], score):
-        emit('send', arg, to=room)
-    else:
+    if rl.frisk(g.iphash, score):
         ratelimit()
+    else:
+        emit('send', arg, to=room)
 
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
