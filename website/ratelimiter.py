@@ -2,7 +2,7 @@ import time
 
 class RateLimiter:
     def __init__(self, records={}, 
-                halflife=30000, threshold=25, hashes=[]):
+                halflife=30000, threshold=25, hashes:dict={}):
         self.records = records
         self.halflife = halflife
         self.threshold = threshold
@@ -18,8 +18,11 @@ class RateLimiter:
 
     def frisk(self, id_, deltaScore):
         record = self.search(id_)
-        if record['arrested']:
-            return True
+        try:
+            if record['arrested']:
+                return True
+        except:
+            return
         record['score'] *= pow(2, -(int(round(time.time() * 1000)) - record['time']) / self.halflife)
         record['score'] += deltaScore
         record['time'] = int(round(time.time() * 1000))
@@ -43,4 +46,4 @@ class RateLimiter:
 
     def clear(self):
         self.records = {}
-        self.hashes = []
+        self.hashes = {}
