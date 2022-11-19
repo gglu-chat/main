@@ -1,4 +1,5 @@
 import time
+import math
 
 class RateLimiter:
     def __init__(self, records={}, 
@@ -22,8 +23,7 @@ class RateLimiter:
             if record['arrested']:
                 return True
         except:
-            record['score'] *= pow(2, -(int(round(time.time() * 1000)) - record['time']) / self.halflife)
-            record['score'] += deltaScore
+            record['score'] = record['score'] * (math.log(deltaScore) / 0.3 * min((int(round(time.time() * 1000)) - record['time']), 50) + 0.06) + 0.5 * record['score'] + 1
             record['time'] = int(round(time.time() * 1000))
             if record['score'] >= self.threshold:
                 return True

@@ -93,7 +93,7 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    score = len(arg['mytext']) / 41 / 2
+    score = len(arg['mytext'])
     if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
     else:
