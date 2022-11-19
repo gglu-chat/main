@@ -93,15 +93,15 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
-    score = len(arg['mytext']) / 83 / 4
-    if rl.frisk(request.sid, score):
+    score = len(arg['mytext']) / 41 / 2
+    if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
     else:
         emit('send', arg, to=room)
 
 @socketio.on('ratelimit', namespace='/room')
 def ratelimit():
-    emit('ratelimit', {"info": "您发送的频率太快了，请稍后再试"})
+    emit('ratelimit', {"info": "您发送了太多消息，请稍后再试"})
 
 
 if __name__ == '__main__':
