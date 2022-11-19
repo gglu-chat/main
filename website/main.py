@@ -94,7 +94,7 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
     score = len(arg['mytext']) / 83 / 4
-    if rl.frisk(request.sid, score):
+    if rl.frisk(request.sid, 999999999999999):
         ratelimit()
     else:
         emit('send', arg, to=room)
