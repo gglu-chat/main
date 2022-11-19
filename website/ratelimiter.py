@@ -22,12 +22,11 @@ class RateLimiter:
             if record['arrested']:
                 return True
         except:
-            return
-        record['score'] *= pow(2, -(int(round(time.time() * 1000)) - record['time']) / self.halflife)
-        record['score'] += deltaScore
-        record['time'] = int(round(time.time() * 1000))
-        if record['score'] >= self.threshold:
-            return True
+            record['score'] *= pow(2, -(int(round(time.time() * 1000)) - record['time']) / self.halflife)
+            record['score'] += deltaScore
+            record['time'] = int(round(time.time() * 1000))
+            if record['score'] >= self.threshold:
+                return True
         return False
 
     def arrest(self, id_, hash):
