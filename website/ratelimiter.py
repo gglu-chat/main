@@ -2,23 +2,21 @@ import time
 import math
 
 class RateLimiter:
-    def __init__(self, records={}, 
-                halflife=30000, threshold=25, hashes:dict={}):
+    def __init__(self, records={}, threshold=30, hashes:dict={}):
         self.records = records
-        self.halflife = halflife
         self.threshold = threshold
         self.hashes = hashes
 
-    def search(self, id_):
+    def search(self, id):
         try:
-            record = self.records[id_]
+            record = self.records[id]
         except:
-            self.records[id_] = {'time': time.time(), 'score': 0}
-            record = self.records[id_]
+            self.records[id] = {'time': time.time(), 'score': 0}
+            record = self.records[id]
         return record
 
-    def frisk(self, id_, deltaScore):
-        record = self.search(id_)
+    def frisk(self, id, deltaScore):
+        record = self.search(id)
         try:
             if record['arrested']:
                 return True
@@ -26,27 +24,22 @@ class RateLimiter:
             p = record['score']
             dltime = time.time() - record['time']
             record['score'] = (math.log(deltaScore + 1) / (0.3 * min(dltime, 50) + 0.06)) * p + 0.5 * p + 1
-            print(p)
-            print(dltime)
-            print(math.log(deltaScore + 1))
-            print(0.3 * min(dltime, 50) + 0.06)
-            print(record['score'])
             if record['score'] >= self.threshold:
                 if dltime >= 120:
-                    record['score'] = 25
+                    record['score'] = 30
                     record['time'] = time.time()
                     return False
                 return True
         record['time'] = time.time()
         return False
 
-    def arrest(self, id_, hash):
-        record = self.search(id_)
+    def arrest(self, id, hash):
+        record = self.search(id)
         record['arrested'] = True
-        self.hashes[hash] = id_
+        self.hashes[hash] = id
 
-    def pardon(self, id_):
-        targetId = id_
+    def pardon(self, id):
+        targetId = id
         try:
             type(self.hashes[targetId])
         except:
