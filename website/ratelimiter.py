@@ -16,6 +16,13 @@ class RateLimiter:
         return record
 
     def frisk(self, id, deltaScore):
+        """Adjusting the ratelimiter via deltascore.
+           mathematical models: 
+        `y=p\left(\\frac{\ln\left(x+1\right)}{0.3\min\left(s,50\right)+0.06}\right)+0.5p+1`
+
+        :param id: target sid / iphash
+        :param deltaScore: adjusting the current score
+        """
         record = self.search(id)
         try:
             if record['arrested']:

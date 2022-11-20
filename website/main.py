@@ -65,8 +65,6 @@ def join(dt):
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
-    #rl.search(iphash)
-    #print(g.iphash)
 
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
