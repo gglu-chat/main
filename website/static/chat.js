@@ -17,14 +17,16 @@ md = new remarkable.Remarkable('full', {
 }).use(remarkable.linkify);
 
 myNick = window.localStorage['nick_and_password']
-nick = prompt('昵称：', myNick)
-if (nick.includes('#')){
-    var well_index = nick.indexOf('#')
-    password = nick.slice(well_index + 1)
-    nick = nick.slice(0,well_index)
-}
-else{
-    password = ''
+if (window.location.search != ''){
+    nick = prompt('昵称：', myNick)
+    if (nick.includes('#')){
+        var well_index = nick.indexOf('#')
+        password = nick.slice(well_index + 1)
+        nick = nick.slice(0,well_index)
+    }
+    else{
+        password = ''
+    }
 }
 
 // 不带"?"的房间名
