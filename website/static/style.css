@@ -18,10 +18,13 @@ body {
     font-weight: 700;
 }
 textarea {
+    justify-content: center;
     height: 50px;
     position: fixed;
     bottom: 0;
-    width: 50rem;
+    max-width: 50rem !important;
+    width: 100%;
+    overflow: auto;
     resize: none;
     box-sizing: border-box;
     padding: 0.5em;
