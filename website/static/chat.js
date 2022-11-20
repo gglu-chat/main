@@ -157,7 +157,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode('◆ 您发送的频率太快了，请稍后再试'));
+        recvbox.appendChild(document.createTextNode('◆ 您发送了太多消息，请稍后再试'));
         chatarea.insertBefore(recvbox, brick);
     })
 
