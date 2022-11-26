@@ -2,7 +2,7 @@ import time
 import math
 
 class RateLimiter:
-    def __init__(self, records={}, threshold=30, hashes:dict={}):
+    def __init__(self, records={}, threshold=35, hashes:dict={}):
         self.records = records
         self.threshold = threshold
         self.hashes = hashes
