@@ -69,6 +69,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     });
 
     socket.on('joinchat', function(dt){
+        var users = document.getElementById('users')
         if (dt.nick == nick){
             trip = dt.trip
             var recvbox = document.createElement('div');
@@ -81,12 +82,26 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 recvbox.appendChild(document.createTextNode('◆ 在线的用户：'+dt.onlineUsers + ',' + nick));
             }    
             chatarea.insertBefore(recvbox, brick)
+            dt.onlineUsers.forEach(item => {
+                var user = document.createElement('a');
+                user.textContent = item;
+    
+                var userLi = document.createElement('li');
+                userLi.appendChild(user);
+                users.appendChild(userLi);
+            });    
         }
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
         var chatarea = document.getElementById('chatarea')    
         recvbox.appendChild(document.createTextNode('◆ ' + dt.nick + ' 加入聊天室'));
         chatarea.insertBefore(recvbox, brick)
+        var user = document.createElement('a');
+        user.textContent = dt.nick;
+        var userLi = document.createElement('li');
+        userLi.appendChild(user);
+        users.appendChild(userLi);
+
 
         document.getElementById("chatbox").onkeydown = function(event){
             event = event || window.event;
@@ -144,7 +159,15 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var chatarea = document.getElementById('chatarea');   
         recvbox.appendChild(document.createTextNode('◆ ' + datas.nick + ' 退出聊天室'));
         chatarea.insertBefore(recvbox, brick);
-    
+
+        var users = document.getElementById('users')
+        var children = users.children
+        for (var i = 0; i < children.length; i++) {
+            var user = children[i];
+            if (user.textContent == datas.nick) {
+                users.removeChild(user);
+            }
+        }
     })
 
     socket.on('nickTaken', function(){

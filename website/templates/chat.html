@@ -7,11 +7,30 @@
         <link id="colorscheme-link" rel="stylesheet" href="../static/color_scheme/default.css" type="text/css">
         <link rel="icon" href="https://s1.ax1x.com/2022/10/01/xuzw4K.png">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.7.0/hint.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
         <title>gglu聊天室</title>
         <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
         <script src="../static/vendor/remarkable.min.js"></script>
     </head>
     <body>
+        <nav style="height: 2em;">
+            <button id="menu" aria-label="查看在线用户">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width: 50;height: 50;">
+                    <circle cx="100%" cy="0%" r="50" fill="rgba(255,0,85,0.7)" />
+                    <path d="M10 18 h30 v-2 H10 v2 z m0 -5 h30 v-2 H10 v2 z m0 -7 v2 h30 V6 H10 z" fill="white" />
+                </svg>
+            </button>
+            <div id="onlineBox" class="hidden">
+                <h3>在线列表</h3>
+                <div id="content">
+                    <ul id="users"></ul>
+                </div>
+                <hr/>
+                <button id="clear"><i class="fa-solid fa-trash-can"></i>清空所有消息</button>
+                <br/>
+                <button id="moreSettings"><i class="fa-solid fa-gear"></i>更多设置</button>
+            </div>
+        </nav>
         <!--
         <select id="colorscheme-selector" style="position: fixed; right: 0em;">
             <option value="fresh-green">fresh-green</option>
@@ -21,13 +40,36 @@
         <audio style="display: none;" id="notify" preload="auto" src="../static/notify.mp3">
             <source src="../static/notify.mp3" type="audio/ogg">
         </audio>
-        <div style="height: 2em;"></div>
         <article id="chatarea">
             <div id="brick" style="height: 4.5rem;"></div>
         </article>
         <div>
             <textarea id="chatbox" type="text" autocomplete="off" autofocus></textarea>
         </div>
+        <script>
+            const menuBtn = document.querySelector('#menu'),
+            popup = document.querySelector('#onlineBox'),
+            clearBtn = document.querySelector('#clear');
+
+            menuBtn.onclick = () =>{
+                if (popup.classList.contains('hidden')){
+                    popup.classList.remove('hidden');
+                    popup.classList.add('show');
+                }
+                else{
+                    popup.classList.remove('show');
+                    popup.classList.add('hidden')
+                }
+            }
+            clearBtn.onclick = () =>{
+                var chatarea = document.querySelector('#chatarea')
+                chatarea.innerHTML = '';
+                var brick = document.createElement('div');
+                brick.setAttribute('id', 'brick');
+                brick.style.height = '4.5rem';
+                chatarea.appendChild(brick);
+            }
+        </script>
         <script src="../static/chat.js"></script>
     </body>
 </html>
