@@ -17,6 +17,9 @@ body {
     padding-top: 0.3em;
     padding-bottom: 0.3em;
 }
+.info {
+    word-wrap: break-word;
+}
 .nick {
     font-weight: 700;
 }
@@ -118,6 +121,7 @@ button {
 .show {
     visibility: visible;
     position: absolute;
+    overflow-y: auto;
     z-index: 999999999;
     right: 10px;
     top: 60px;
@@ -131,6 +135,22 @@ button {
     box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
     transition: opacity 0.2s 0s ease-in-out;
     opacity: 1;
+}
+.show::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    background-color: #a9a9a9;
+}
+.show::-webkit-scrollbar-track{
+    background-color: #dcdcdc;
+    border-radius: 5px;
+}
+.show::-webkit-scrollbar-thumb{
+    background-color: #a9a9a9;
+    border-radius: 5px;
+}
+.show::-webkit-scrollbar-thumb:hover{
+    background-color: #808080;
 }
 .hidden {
     visibility: hidden;
