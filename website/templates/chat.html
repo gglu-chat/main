@@ -20,7 +20,7 @@
                     <path d="M10 18 h30 v-2 H10 v2 z m0 -5 h30 v-2 H10 v2 z m0 -7 v2 h30 V6 H10 z" fill="white" />
                 </svg>
             </button>
-            <div id="onlineBox" class="hidden">
+            <div id="onlineBox" class="hidden" tabindex="0">
                 <h3>在线列表</h3>
                 <div id="content">
                     <ul id="users"></ul>
@@ -55,11 +55,16 @@
                 if (popup.classList.contains('hidden')){
                     popup.classList.remove('hidden');
                     popup.classList.add('show');
+                    popup.focus();
                 }
                 else{
                     popup.classList.remove('show');
                     popup.classList.add('hidden')
                 }
+            }
+            popup.onblur = () =>{
+                popup.classList.remove('show');
+                popup.classList.add('hidden')
             }
             clearBtn.onclick = () =>{
                 var chatarea = document.querySelector('#chatarea')
