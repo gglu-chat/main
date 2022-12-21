@@ -46,10 +46,23 @@
         <div>
             <textarea id="chatbox" type="text" autocomplete="off" autofocus></textarea>
         </div>
+        <div class="popBackground">
+            <div class="modal">
+                <header>
+                    <h1>更多设置</h1><div id="close" style="font-size: 30px;cursor: pointer;">&times;</div>
+                </header>
+                </br>
+                <p>空空如也，你瞅啥……</p>
+            </div>
+        </div>
         <script>
             const menuBtn = document.querySelector('#menu'),
             popup = document.querySelector('#onlineBox'),
-            clearBtn = document.querySelector('#clear');
+            clearBtn = document.querySelector('#clear'),
+            settingBtn = document.querySelector('#moreSettings')
+            settingBox = document.querySelector('.modal'),
+            closeBtn = document.querySelector('#close'),
+            popBackgroundArea = document.querySelector('.popBackground');
 
             menuBtn.onclick = () =>{
                 if (popup.classList.contains('hidden')){
@@ -61,6 +74,14 @@
                     popup.classList.add('hidden')
                 }
             }
+
+            settingBtn.onclick = () =>{
+                popBackgroundArea.classList.toggle('showing')
+            }
+            closeBtn.onclick = () =>{
+                popBackgroundArea.classList.toggle('showing')
+            }
+
             popup.onblur = () =>{
                 popup.classList.remove('show');
                 popup.classList.add('hidden')

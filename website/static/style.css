@@ -107,7 +107,7 @@ button {
 }
 #menu {     /*菜单按钮*/
     position: absolute;
-    z-index: 999999999;
+    z-index: 10;
     right: 0px;
     top: 0px;
     background-color: transparent;
@@ -124,7 +124,7 @@ button {
     visibility: visible;
     position: absolute;
     overflow-y: auto;
-    z-index: 999999999;
+    z-index: 11;
     right: 10px;
     top: 60px;
     border-radius: 1em;
@@ -160,4 +160,43 @@ button {
 }
 ul {
     padding-inline-start: 20px;
+}
+.popBackground {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    will-change: opacity;
+    z-index: 12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.434);
+    transition: opacity 0.2s 0s ease-in-out;
+    opacity: 0;
+}
+.popBackground.showing {
+    visibility: visible;
+    opacity: 1;
+}
+.modal{
+    width: 40em;
+    height: auto;
+    background-color: azure;
+    margin: 1em;
+    border-radius: 1em 1em 1em 1em;
+    padding: 1em;
+    box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#close:hover{
+    color: deeppink;
 }
