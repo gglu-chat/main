@@ -27,7 +27,7 @@ body {
 }
 textarea {
     justify-content: center;
-    height: 50px;
+    height: 55px;
     position: fixed;
     bottom: 0;
     max-width: 50rem !important;
@@ -129,7 +129,7 @@ button {
     top: 60px;
     border-radius: 1em;
     background-color: rgb(240, 248, 255, .7);
-    width: 11em;
+    width: 12em;
     padding: 0.5em;
     max-height: 550px;
     -webkit-backdrop-filter: blur(5px);
