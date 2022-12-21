@@ -10,3 +10,6 @@ a:hover {
 .nick {
     color: #2f4f4f;
 }
+::selection {
+    background-color: #8592a6d1;
+}
