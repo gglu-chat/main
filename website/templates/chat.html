@@ -79,7 +79,8 @@
                 popBackgroundArea.classList.toggle('showing')
             }
             closeBtn.onclick = () =>{
-                popBackgroundArea.classList.toggle('showing')
+                popBackgroundArea.style.opacity = 0
+                setTimeout("popBackgroundArea.classList.toggle('showing')", 200)
             }
 
             popup.onblur = () =>{
