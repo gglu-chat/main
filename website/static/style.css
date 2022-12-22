@@ -85,6 +85,7 @@ blockquote {
     padding: 3px 10px;
     margin: 3px;
     border-left: 5px solid #455656;
+    background-color: #eeeeee45;
 }
 code {
     padding: .2em .4em;
@@ -199,4 +200,7 @@ header {
 }
 #close:hover{
     color: deeppink;
+}
+.foldmsg {
+    background-color: #eeeeee45;
 }

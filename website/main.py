@@ -94,7 +94,7 @@ def handle_message(arg):
     score = len(arg['mytext'])
     if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
-    elif len(arg['mytext']) >= 1000:
+    elif len(arg['mytext']) >= 750:
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
