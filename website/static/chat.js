@@ -187,6 +187,14 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     })
 
     socket.on('foldmsg', function(arg){
+        var nick_box = document.createElement('a');
+        nick_box.classList.add('nick')
+        nick_box.classList.add('hint--bottom-right')
+        var date = new Date(arg.time)
+        nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+        var your_nick = document.createTextNode(arg.mynick);
+        nick_box.append(your_nick)
+
         var recvbox = document.createElement('details');
         recvbox.classList.add('foldmsg');
         var summary = document.createElement('summary');
