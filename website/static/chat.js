@@ -202,6 +202,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var text = document.createElement('div');
         text.innerHTML = md.render(arg.mytext);
         var chatarea = document.getElementById('chatarea');
+        recvbox.appendChild(nick_box);
         recvbox.appendChild(summary);
         recvbox.appendChild(text);
         chatarea.insertBefore(recvbox, brick);
