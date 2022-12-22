@@ -195,16 +195,18 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var your_nick = document.createTextNode(arg.mynick);
         nick_box.append(your_nick)
 
-        var recvbox = document.createElement('details');
+        var recvbox = document.createElement('div');
         recvbox.classList.add('foldmsg');
+        var details = document.createElement('details');
         var summary = document.createElement('summary');
         summary.innerHTML = '点此展开长消息...'
         var text = document.createElement('div');
         text.innerHTML = md.render(arg.mytext);
         var chatarea = document.getElementById('chatarea');
         recvbox.appendChild(nick_box);
-        recvbox.appendChild(summary);
-        recvbox.appendChild(text);
+        details.appendChild(summary);
+        details.appendChild(text);
+        recvbox.appendChild(details);
         chatarea.insertBefore(recvbox, brick);
     })
 }
