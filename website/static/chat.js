@@ -196,9 +196,10 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         nick_box.append(your_nick)
 
         var recvbox = document.createElement('div');
-        recvbox.classList.add('foldmsg');
+        recvbox.classList.add('message');
         var details = document.createElement('details');
         var summary = document.createElement('summary');
+        summary.classList.add('foldmsg')
         summary.innerHTML = '点此展开长消息...'
         var text = document.createElement('div');
         text.innerHTML = md.render(arg.mytext);
