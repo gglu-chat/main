@@ -14,6 +14,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
 
+# 存放sid，和sid对应的用户昵称和加入的房间
 user_dict = {}
 
 ipsalt = os.urandom(32)
@@ -29,6 +30,7 @@ def chat():
     return render_template('chat.html')
 
 def getRoomUsers(room):
+    """获取指定房间的用户"""
     room_users = []
     for i in user_dict:
         if user_dict[i][1] == room:
@@ -41,8 +43,15 @@ def connect():
 
 @socketio.on('disconnect', namespace='/room')
 def disconnects():
+    # 断开连接时触发leave事件
     leave(user_dict[request.sid][1])
     user_dict.pop(request.sid)
+
+@socketio.on('leave', namespace='/room')
+def leave(datas):
+    room = user_dict[request.sid][1]
+    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid][0]}, to=room)
+    leave_room(room)
 
 @socketio.on('nick_taken', namespace='/room')
 def nickTaken():
@@ -53,6 +62,7 @@ def join(dt):
     dt = json.loads(str(json.dumps(dt)))
     room = dt['room']
     password = dt['password']
+    # 密码不为空时加密，为空时trip直接赋值'null'
     if password != '':
         sha256 = hashlib.sha256()
         sha256.update(password.encode() + salt)
@@ -60,12 +70,14 @@ def join(dt):
     else:
         trip = 'null'
 
+    # 通过xxf头来获取ip并加密
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
     sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
 
+    # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
@@ -76,14 +88,7 @@ def join(dt):
     nick_and_room.append(dt['nick'])
     nick_and_room.append(room)
     user_dict[request.sid] = nick_and_room
-    #{'nBfbNBltuGT0DRmfAAAB': ['name', 'chat_room']}
-
-
-@socketio.on('leave', namespace='/room')
-def leave(datas):
-    room = user_dict[request.sid][1]
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid][0]}, to=room)
-    leave_room(room)
+    # {'nBfbNBltuGT0DRmfAAAB': ['name', 'chat_room']}
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
@@ -91,9 +96,13 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
+    # 判断消息是否满足频率限制
     score = len(arg['mytext'])
     if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
+    # 字数超过750或者行数超过25行时折叠消息
+    elif len(arg['mytext']) >= 750 or arg['mytext'].count('\n') >= 25:
+        emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
 

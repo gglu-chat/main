@@ -6,6 +6,7 @@ var socket = io.connect(ws_url);
 
 let nick, onlineUsers, password, trip, md, myNick, myRoom;
 
+// 初始化markdown引擎
 md = new remarkable.Remarkable('full', {
     html: false,
 	xhtmlOut: false,
@@ -17,6 +18,7 @@ md = new remarkable.Remarkable('full', {
 }).use(remarkable.linkify);
 
 myNick = window.localStorage['nick_and_password']
+// 当`?`后面有内容时(输入了房间名)弹出对话框
 if (window.location.search != ''){
     nick = prompt('昵称：', myNick)
     if (nick.includes('#')){
@@ -34,6 +36,7 @@ try{
     myRoom = (window.location.search.match(/^\?(.*)$/))[1]
 }
 catch(e){
+    // `?`后面无内容时进入随机的8字母房间
     myRoom = getRandomString(8)
     window.location.assign('http://' + document.domain + ':' + location.port + '/room?' + myRoom)
 }
@@ -65,6 +68,7 @@ var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(){
             window.localStorage['nick_and_password'] = nick + '#' + password
+            // 向服务端发送join事件
             socket.emit('join', {"type": "join", "nick": nick, "password": password, "room": myRoom});
     });
 
@@ -82,6 +86,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 recvbox.appendChild(document.createTextNode('◆ 在线的用户：'+dt.onlineUsers + ',' + nick));
             }    
             chatarea.insertBefore(recvbox, brick)
+            // 向在线列表中添加用户
             dt.onlineUsers.forEach(item => {
                 var user = document.createElement('a');
                 user.textContent = item;
@@ -105,11 +110,13 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
         document.getElementById("chatbox").onkeydown = function(event){
             event = event || window.event;
+            // enter发送，shift+enter换行
             if (event.keyCode == 13 && !event.shiftKey){
                 event.preventDefault();
                 var txt = document.getElementById('chatbox').value;
                 if (txt != '' && txt != ' ' && socket.connected){
                     var ssid = socket.id;
+                    // 向服务端发送message事件
                     socket.emit('message', {"mytext": txt, "myid": ssid, "mynick": nick, "trip": trip, "room": myRoom});
                     document.getElementById('chatbox').value = '';
                 }
@@ -117,6 +124,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             }
         };
 
+        // 给send事件注册处理程序
         socket.on('send', function(arg){
             var recvbox = document.createElement('div');
             recvbox.classList.add('message');
@@ -138,14 +146,17 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 recvbox.appendChild(nick_box);
                 recvbox.appendChild(text);
                 chatarea.insertBefore(recvbox, brick)
+                // 每发一条消息，滚动条就滚动到底部
                 chatarea.scrollTop = chatarea.scrollHeight
             }
             msg_id = arg.msg_id
 
+            // `@someone`播放提示音
             if (arg.mytext.includes('@' + nick)){
                 document.getElementById('notify').play();
             }
 
+            // 点击昵称在输入框内插入`@someone`
             nick_box.onclick = function (e) {
                 insertAtCursor("@" + e.target.innerHTML + " ");
                 document.getElementById('chatbox').focus();
@@ -153,6 +164,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
         })
     })
+
+    // 给leavechat事件注册处理程序
     socket.on('leavechat', function(datas){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
@@ -162,6 +175,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
         var users = document.getElementById('users')
         var children = users.children
+        // 移除在线列表中离开的用户
         for (var i = 0; i < children.length; i++) {
             var user = children[i];
             if (user.textContent == datas.nick) {
@@ -186,8 +200,33 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         chatarea.insertBefore(recvbox, brick);
     })
 
+    socket.on('foldmsg', function(arg){
+        var nick_box = document.createElement('a');
+        nick_box.classList.add('nick')
+        nick_box.classList.add('hint--bottom-right')
+        var date = new Date(arg.time)
+        nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+        var your_nick = document.createTextNode(arg.mynick);
+        nick_box.append(your_nick)
+
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('message');
+        var details = document.createElement('details');
+        var summary = document.createElement('summary');
+        summary.classList.add('foldmsg')
+        summary.innerHTML = '点此展开长消息...'
+        var text = document.createElement('div');
+        text.innerHTML = md.render(arg.mytext);
+        var chatarea = document.getElementById('chatarea');
+        recvbox.appendChild(nick_box);
+        details.appendChild(summary);
+        details.appendChild(text);
+        recvbox.appendChild(details);
+        chatarea.insertBefore(recvbox, brick);
+    })
 }
 else{
+    // 昵称为空或不满足昵称要求的断开连接
     socket.disconnect();
     var recvbox = document.createElement('div');
     recvbox.classList.add('info');
