@@ -100,8 +100,8 @@ def handle_message(arg):
     score = len(arg['mytext'])
     if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
-    # 字数超过750时折叠消息
-    elif len(arg['mytext']) >= 750:
+    # 字数超过750或者行数超过25行时折叠消息
+    elif len(arg['mytext']) >= 750 or arg['mytext'].count('\n') >= 25:
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
