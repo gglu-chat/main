@@ -18,7 +18,9 @@ salt = os.environ.get('SALT').encode()
 # 读取配置文件
 with open('/app/website/static/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=yaml.CLoader)
+    # 各个标签的trip
     labels = config['labels']
+    # 各个标签的等级
     levels = config['levels']
 
 # 存放sid，和sid对应的用户昵称和加入的房间
@@ -114,11 +116,15 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
+
     # 判断消息是否满足频率限制
     score = len(arg['mytext'])
     if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
         ratelimit()
-    # 字数超过750或者行数超过25行时折叠消息
+    # 指令
+    elif arg['mytext'][0] == '/':
+        pass
+    # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(arg['mytext']) >= 750 or arg['mytext'].count('\n') >= 25:
         emit('foldmsg', arg, to=room)
     else:
