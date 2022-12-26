@@ -16,7 +16,7 @@ socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
 
 # 读取配置文件
-with open('/static/config.yaml', 'r', encoding='utf-8') as file:
+with open('static/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=yaml.CLoader)
     labels = config['labels']
 
