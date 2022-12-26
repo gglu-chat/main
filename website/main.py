@@ -84,12 +84,13 @@ def join(dt):
     g.iphash = iphash
 
     # 检测该用户trip所属的标签并添加
+    label = ''
     for k, v in labels.items():
         if trip in v:
             label = k
-        else:
-            label = 'user'
-
+    if not label:
+        label = 'user'
+    
     # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
