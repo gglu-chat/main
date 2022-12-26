@@ -116,16 +116,22 @@ def handle_message(arg):
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
+    text = arg['mytext']
 
     # 判断消息是否满足频率限制
-    score = len(arg['mytext'])
-    if rl.frisk(request.sid, score) or len(arg['mytext']) > 16384:
+    score = len(text)
+    if rl.frisk(request.sid, score) or len(text) > 16384:
         ratelimit()
     # 指令
-    elif arg['mytext'][0] == '/':
-        pass
+    elif text[0] == '/':
+        if text[1:5] == 'kick':
+            target_nick = text.split(' ')[1]
+            for k, v in user_dict.items():
+                if target_nick in v:
+                    target_sid = k
+            disconnect(target_sid)
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
-    elif len(arg['mytext']) >= 750 or arg['mytext'].count('\n') >= 25:
+    elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
