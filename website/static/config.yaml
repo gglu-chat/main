@@ -1,0 +1,8 @@
+labels:
+  admin: HdYea8
+  moderator:
+    - trip1
+    - trip2
+  member:
+    - trip3
+    - trip4

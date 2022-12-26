@@ -6,6 +6,7 @@ import random
 import hashlib
 import base64
 import time
+import yaml
 from ratelimiter import RateLimiter
 
 app = Flask(__name__)
@@ -13,6 +14,11 @@ app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
+
+# 读取配置文件
+with open('/static/config.yaml', 'r', encoding='utf-8') as file:
+    config = yaml.load(file, Loader=yaml.CLoader)
+    labels = config['labels']
 
 # 存放sid，和sid对应的用户昵称和加入的房间
 user_dict = {}
@@ -70,17 +76,24 @@ def join(dt):
     else:
         trip = 'null'
 
-    # 通过xxf头来获取ip并加密
+    # 通过xff头来获取ip并加密
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
     sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
 
+    # 检测该用户trip所属的标签并添加
+    for k, v in labels.items():
+        if trip in v:
+            label = k
+        else:
+            label = 'user'
+
     # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
+        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "label": label, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
         nickTaken()
         disconnect()
