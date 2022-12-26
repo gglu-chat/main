@@ -19,6 +19,7 @@ salt = os.environ.get('SALT').encode()
 with open('/app/website/static/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=yaml.CLoader)
     labels = config['labels']
+    levels = config['levels']
 
 # 存放sid，和sid对应的用户昵称和加入的房间
 user_dict = {}
@@ -83,18 +84,21 @@ def join(dt):
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
     g.iphash = iphash
 
-    # 检测该用户trip所属的标签并添加
+    # 检测该用户trip所属的标签并添加，再添加相应的等级
     label = ''
+    level = ''
     for k, v in labels.items():
         if trip in v:
             label = k
+            level = levels[k]
     if not label:
         label = 'user'
+        level = levels['user']
     
     # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "label": label, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
+        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "label": label, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
         nickTaken()
         disconnect()

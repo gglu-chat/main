@@ -6,3 +6,9 @@ labels:
   member:
     - trip3
     - trip4
+
+levels:
+  admin: 4
+  moderator: 3
+  member: 2
+  user: 1
