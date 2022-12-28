@@ -1,14 +1,12 @@
-labels:
-  admin: HdYea8
-  moderator:
+levels:
+  # 站长
+  4: HdYea8
+  # 管理员
+  3:
     - iZbyEc
     - trip2
-  member:
+  # 成员
+  2:
     - trip3
     - trip4
-
-levels:
-  admin: 4
-  moderator: 3
-  member: 2
-  user: 1
+  # 1为用户

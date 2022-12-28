@@ -6,7 +6,7 @@ var socket = io.connect(ws_url, {
     reconnection: false
 });
 
-let nick, onlineUsers, password, trip, md, myNick, myRoom, label, level;
+let nick, onlineUsers, password, trip, md, myNick, myRoom, level;
 
 // 初始化markdown引擎
 md = new remarkable.Remarkable('full', {
@@ -78,7 +78,6 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var users = document.getElementById('users')
         if (dt.nick == nick){
             trip = dt.trip
-            label = dt.label
             level = dt.level
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
@@ -121,7 +120,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 if (txt != '' && txt != ' ' && socket.connected){
                     var ssid = socket.id;
                     // 向服务端发送message事件
-                    socket.emit('message', {"mytext": txt, "myid": ssid, "mynick": nick, "trip": trip, "room": myRoom, "label": label, "level": level});
+                    socket.emit('message', {"mytext": txt, "myid": ssid, "mynick": nick, "trip": trip, "room": myRoom, "level": level});
                     document.getElementById('chatbox').value = '';
                 }
             

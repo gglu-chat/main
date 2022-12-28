@@ -18,9 +18,7 @@ salt = os.environ.get('SALT').encode()
 # 读取配置文件
 with open('/app/website/static/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=yaml.CLoader)
-    # 各个标签的trip
-    labels = config['labels']
-    # 各个标签的等级
+    # 各等级所对应的trip
     levels = config['levels']
 
 # 存放sid，和sid对应的用户昵称和加入的房间
@@ -87,20 +85,17 @@ def join(dt):
     g.iphash = iphash
 
     # 检测该用户trip所属的标签并添加，再添加相应的等级
-    label = ''
     level = ''
-    for k, v in labels.items():
+    for k, v in levels.items():
         if trip in v:
-            label = k
-            level = levels[k]
-    if not label:
-        label = 'user'
-        level = levels['user']
+            level = k
+    if not level:
+        level = 1
     
     # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "label": label, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
+        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
         nickTaken()
         disconnect()
@@ -122,14 +117,9 @@ def handle_message(arg):
     score = len(text)
     if rl.frisk(request.sid, score) or len(text) > 16384:
         ratelimit()
-    # 指令
+    # todo: 指令
     elif text[0] == '/':
-        if text[1:5] == 'kick':
-            target_nick = text.split(' ')[1]
-            for k, v in user_dict.items():
-                if target_nick in v:
-                    target_sid = k
-            disconnect(target_sid)
+        pass
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
