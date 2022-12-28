@@ -2,9 +2,7 @@
     不用看啦我写得很烂q-q
 */
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
-var socket = io.connect(ws_url, {
-    reconnection: false
-});
+var socket = io.connect(ws_url);
 
 let nick, onlineUsers, password, trip, md, myNick, myRoom, level;
 
