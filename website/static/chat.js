@@ -70,6 +70,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             window.localStorage['nick_and_password'] = nick + '#' + password
             // 向服务端发送join事件
             socket.emit('join', {"type": "join", "nick": nick, "password": password, "room": myRoom});
+            var users = document.getElementById('users');
+            users.innerHTML = '';
     });
 
     socket.on('joinchat', function(dt){
