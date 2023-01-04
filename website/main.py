@@ -21,7 +21,7 @@ with open('/app/website/static/config.yaml', 'r', encoding='utf-8') as file:
     # 各等级所对应的trip
     levels = config['levels']
 
-# 存放sid，和sid对应的用户昵称和加入的房间
+# 存放用户信息（nick,room,trip,level,hash）
 user_dict = {}
 
 ipsalt = os.urandom(32)
@@ -40,8 +40,8 @@ def getRoomUsers(room):
     """获取指定房间的用户"""
     room_users = []
     for i in user_dict:
-        if user_dict[i][1] == room:
-            room_users.append(user_dict[i][0])
+        if user_dict[i]['room'] == room:
+            room_users.append(user_dict[i]['nick'])
     return room_users
 
 @socketio.on('connect', namespace='/room')
@@ -51,13 +51,13 @@ def connect():
 @socketio.on('disconnect', namespace='/room')
 def disconnects():
     # 断开连接时触发leave事件
-    leave(user_dict[request.sid][1])
+    leave(user_dict[request.sid]['room'])
     user_dict.pop(request.sid)
 
 @socketio.on('leave', namespace='/room')
 def leave(datas):
-    room = user_dict[request.sid][1]
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid][0]}, to=room)
+    room = user_dict[request.sid]['room']
+    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid]['nick']}, to=room)
     leave_room(room)
 
 @socketio.on('nick_taken', namespace='/room')
@@ -67,6 +67,7 @@ def nickTaken():
 @socketio.on('join', namespace='/room')
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
+    nick = dt['nick']
     room = dt['room']
     password = dt['password']
     # 密码不为空时加密，为空时trip直接赋值'null'
@@ -82,7 +83,6 @@ def join(dt):
     sha256 = hashlib.sha256()
     sha256.update(ip.encode() + ipsalt)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
-    g.iphash = iphash
 
     # 检测该用户trip所属的标签并添加，再添加相应的等级
     level = ''
@@ -95,15 +95,15 @@ def join(dt):
     # 检测昵称是否重复
     if dt['nick'] not in getRoomUsers(room):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": dt['nick'], "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
+        emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
         nickTaken()
         disconnect()
-    nick_and_room = []
-    nick_and_room.append(dt['nick'])
-    nick_and_room.append(room)
-    user_dict[request.sid] = nick_and_room
-    # {'nBfbNBltuGT0DRmfAAAB': ['name', 'chat_room']}
+    user_dict[request.sid]['nick'] = nick
+    user_dict[request.sid]['room'] = room
+    user_dict[request.sid]['trip'] = trip
+    user_dict[request.sid]['level'] = level
+    user_dict[request.sid]['hash'] = iphash
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
