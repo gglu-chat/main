@@ -12,7 +12,7 @@ from ratelimiter import RateLimiter
 app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, logger=True)
+socketio = SocketIO(app, logger=True, engineio_logger=True)
 salt = os.environ.get('SALT').encode()
 
 # 读取配置文件
@@ -114,8 +114,9 @@ def handle_message(arg):
     text = arg['mytext']
 
     # 判断消息是否满足频率限制
+    iphash = user_dict[request.sid]['hash']
     score = len(text)
-    if rl.frisk(request.sid, score) or len(text) > 16384:
+    if rl.frisk(iphash, score) or len(text) > 16384:
         ratelimit()
     # todo: 指令
     elif text[0] == '/':
