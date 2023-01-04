@@ -40,7 +40,7 @@ catch(e){
     myRoom = getRandomString(8)
     window.location.assign('http://' + document.domain + ':' + location.port + '/room?' + myRoom)
 }
-document.title = '?' + myRoom + ' - gglu聊天室';
+document.title = `?${myRoom} - gglu聊天室`;
 
 function getRandomString(length){
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -81,10 +81,10 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
             if (dt.onlineUsers.length == 0){
-                recvbox.appendChild(document.createTextNode('◆ 在线的用户：' + nick));
+                recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
             }
             else{
-                recvbox.appendChild(document.createTextNode('◆ 在线的用户：'+dt.onlineUsers + ',' + nick));
+                recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
             }    
             chatarea.insertBefore(recvbox, brick)
             // 向在线列表中添加用户
@@ -100,7 +100,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
         var chatarea = document.getElementById('chatarea')    
-        recvbox.appendChild(document.createTextNode('◆ ' + dt.nick + ' 加入聊天室'));
+        recvbox.appendChild(document.createTextNode(`◆ ${dt.nick} 加入聊天室`));
         chatarea.insertBefore(recvbox, brick)
         var user = document.createElement('a');
         user.textContent = dt.nick;
@@ -134,7 +134,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.classList.add('nick')
             nick_box.classList.add('hint--bottom-right')
             var date = new Date(arg.time)
-            nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+            nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             //消息部分
@@ -159,7 +159,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
             // 点击昵称在输入框内插入`@someone`
             nick_box.onclick = function (e) {
-                insertAtCursor("@" + e.target.innerHTML + " ");
+                insertAtCursor(`@${e.target.innerHTML} `);
                 document.getElementById('chatbox').focus();
             }
 
@@ -171,7 +171,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode('◆ ' + datas.nick + ' 退出聊天室'));
+        recvbox.appendChild(document.createTextNode(`◆ ${datas.nick} 退出聊天室`));
         chatarea.insertBefore(recvbox, brick);
 
         var users = document.getElementById('users')
@@ -206,7 +206,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         nick_box.classList.add('nick')
         nick_box.classList.add('hint--bottom-right')
         var date = new Date(arg.time)
-        nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+        nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
         var your_nick = document.createTextNode(arg.mynick);
         nick_box.append(your_nick)
 
