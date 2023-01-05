@@ -12,7 +12,7 @@ from ratelimiter import RateLimiter
 app = Flask(__name__)
 app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, logger=True, engineio_logger=True)
+socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
 
 # 读取配置文件
@@ -43,6 +43,13 @@ def getRoomUsers(room):
         if user_dict[i]['room'] == room:
             room_users.append(user_dict[i]['nick'])
     return room_users
+
+def getUserSid(nick):
+    """获取指定用户名的sid"""
+    for i in user_dict:
+        if user_dict[i]['nick'] == nick:
+            user_sid = user_dict[i]
+    return user_sid
 
 @socketio.on('connect', namespace='/room')
 def connect():
@@ -115,6 +122,7 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     room = arg['room']
     text = arg['mytext']
+    level = arg['level']
 
     # 判断消息是否满足频率限制
     iphash = user_dict[request.sid]['hash']
@@ -123,7 +131,13 @@ def handle_message(arg):
         ratelimit()
     # todo: 指令
     elif text[0] == '/':
-        pass
+        command = text.split(' ')[0]
+        if command == '/kick' and level >= 3:
+            try:
+                target_nick = text.split(' ')[1]
+                disconnect(getUserSid(target_nick))
+            except:
+                sendInfo({"info": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
@@ -134,6 +148,9 @@ def handle_message(arg):
 def ratelimit():
     emit('ratelimit', {"info": "您发送了太多消息，请稍后再试"})
 
+@socketio.on('info', namespace='/room')
+def sendInfo(data):
+    emit('info', data, to=request.sid)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 15264))

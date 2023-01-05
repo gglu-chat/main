@@ -226,6 +226,14 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.appendChild(details);
         chatarea.insertBefore(recvbox, brick);
     })
+
+    socket.on('info', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');   
+        recvbox.appendChild(document.createTextNode(`◆ ${data.info}`));
+        chatarea.insertBefore(recvbox, brick);
+    })
 }
 else{
     // 昵称为空或不满足昵称要求的断开连接
