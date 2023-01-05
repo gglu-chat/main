@@ -4,7 +4,7 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip, md, myNick, myRoom, level;
+let nick, onlineUsers, password, trip, md, myNick, myRoom;
 
 // 初始化markdown引擎
 md = new remarkable.Remarkable('full', {
@@ -77,7 +77,6 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('joinchat', function(dt){
         if (dt.nick == nick){
             trip = dt.trip
-            level = dt.level
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
@@ -116,8 +115,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             if (event.keyCode == 13 && !event.shiftKey){
                 event.preventDefault();
                 var txt = document.getElementById('chatbox').value;
-                if (txt != '' && txt != ' ' && socket.connected){
-                    var ssid = socket.id;
+                if (txt && typeof txt === 'string' && socket.connected){
                     // 向服务端发送message事件
                     socket.emit('message', {"type": "chat", "mytext": txt});
                     document.getElementById('chatbox').value = '';
@@ -211,11 +209,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         chatarea.insertBefore(recvbox, brick);
     })
 
-    socket.on('info', function(data){
+    socket.on('warn', function(data){
         var recvbox = document.createElement('div');
-        recvbox.classList.add('info');
+        recvbox.classList.add('warn');
         var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(`◆ ${data.info}`));
+        recvbox.appendChild(document.createTextNode(`◆ ${data.warn}`));
         chatarea.insertBefore(recvbox, brick);
     })
 }
@@ -223,7 +221,7 @@ else{
     // 昵称为空或不满足昵称要求的断开连接
     socket.disconnect();
     var recvbox = document.createElement('div');
-    recvbox.classList.add('info');
+    recvbox.classList.add('warn');
     var chatarea = document.getElementById('chatarea');   
     recvbox.appendChild(document.createTextNode('◆ 昵称只能包含字母、数字以及下划线，且长度不超过12'));
     chatarea.insertBefore(recvbox, brick);

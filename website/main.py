@@ -104,7 +104,7 @@ def join(dt):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
-        sendInfo({"info": "昵称已被占用"})
+        sendWarn({"warn": "昵称已被占用"})
         disconnect()
     user_dict[request.sid] = {}
     user_dict[request.sid]['nick'] = nick
@@ -130,7 +130,7 @@ def handle_message(arg):
     iphash = user_dict[request.sid]['hash']
     score = len(text)
     if rl.frisk(iphash, score) or len(text) > 16384:
-        sendInfo({"info": "您发送了太多消息，请稍后再试"})
+        sendWarn({"warn": "您发送了太多消息，请稍后再试"})
     # todo: 指令
     elif text[0] == '/':
         command = text.split(' ')[0]
@@ -141,16 +141,16 @@ def handle_message(arg):
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
             except:
-                sendInfo({"info": "请检查您的命令格式。"})
+                sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
 
-@socketio.on('info', namespace='/room')
-def sendInfo(data):
-    emit('info', data, to=request.sid)
+@socketio.on('warn', namespace='/room')
+def sendWarn(data):
+    emit('warn', data, to=request.sid)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 15264))

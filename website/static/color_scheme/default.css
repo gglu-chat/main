@@ -1,6 +1,7 @@
 body {
     background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
-    color: #2f4f4f;}
+    color: #2f4f4f
+}
 textarea {
     color: #2e294d;
 }
@@ -12,4 +13,7 @@ a:hover {
 }
 ::selection {
     background-color: #8592a6d1;
+}
+.warn {
+    color: #d38a40;
 }
