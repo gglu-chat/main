@@ -112,7 +112,6 @@ def join(dt):
     user_dict[request.sid]['trip'] = trip
     user_dict[request.sid]['level'] = level
     user_dict[request.sid]['hash'] = iphash
-    print(user_dict)
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
