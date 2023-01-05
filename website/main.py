@@ -28,6 +28,12 @@ ipsalt = os.urandom(32)
 
 rl = RateLimiter()
 
+commands = """所有命令：\n
+/help：查看本命令帮助\n
+/w <昵称> <文字>：向目标用户私聊\n
+/kick <昵称>：断开目标用户的连接\n
+"""
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -134,13 +140,15 @@ def handle_message(arg):
     # todo: 指令
     elif text[0] == '/':
         command = text.split(' ')[0]
+        if command == '/h' or '/help':
+            sendWarn({"warn": commands})
         if command == '/w':
             target_user = text.split(' ')[1]
             wmsg = text.split(' ')[2]
-            #try:
-            whisper(target_user, wmsg)
-            #except:
-                #sendWarn({"warn": "请检查您的命令格式"})
+            try:
+                whisper(target_user, wmsg)
+            except:
+                sendWarn({"warn": "请检查您的命令格式"})
         elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
