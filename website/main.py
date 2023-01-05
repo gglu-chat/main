@@ -134,7 +134,14 @@ def handle_message(arg):
     # todo: 指令
     elif text[0] == '/':
         command = text.split(' ')[0]
-        if command == '/kick' and level >= 3:
+        if command == '/w':
+            target_user = text.split(' ')[1]
+            wmsg = text.split(' ')[2]
+            try:
+                whisper(target_user, wmsg)
+            except:
+                sendWarn({"warn": "请检查您的命令格式"})
+        elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
                 target_sid = getUserSid(target_nick)
@@ -151,6 +158,12 @@ def handle_message(arg):
 @socketio.on('warn', namespace='/room')
 def sendWarn(data):
     emit('warn', data, to=request.sid)
+
+@socketio.on('whisper', namespace='/room')
+def whisper(nick, text):
+    time = int(round(time.time() * 1000))
+    arg = {"type": "whisper", "text": text, "from": request.sid, "to": nick, "time": time}
+    emit('whisper', arg, to=getUserSid(nick))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 15264))
