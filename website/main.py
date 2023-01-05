@@ -28,7 +28,7 @@ ipsalt = os.urandom(32)
 
 rl = RateLimiter()
 
-commands = """所有命令：\n
+all_commands = """所有命令：\n
 /help：查看本命令帮助\n
 /w <昵称> <文字>：向目标用户私聊\n
 /kick <昵称>：断开目标用户的连接\n
@@ -137,11 +137,10 @@ def handle_message(arg):
     score = len(text)
     if rl.frisk(iphash, score) or len(text) > 16384:
         sendWarn({"warn": "您发送了太多消息，请稍后再试"})
-    # todo: 指令
     elif text[0] == '/':
         command = text.split(' ')[0]
         if command == '/h' or '/help':
-            sendWarn({"warn": commands})
+            sendWarn({"warn": all_commands})
         elif command == '/w':
             target_user = text.split(' ')[1]
             wmsg = text.split(' ')[2]
