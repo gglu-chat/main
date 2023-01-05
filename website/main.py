@@ -71,10 +71,6 @@ def leave(datas):
     emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': nick}, to=room)
     leave_room(room)
 
-@socketio.on('nick_taken', namespace='/room')
-def nickTaken():
-    emit('nickTaken', {"info": "昵称已被占用"})
-
 @socketio.on('join', namespace='/room')
 def join(dt):
     dt = json.loads(str(json.dumps(dt)))
@@ -108,7 +104,7 @@ def join(dt):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
-        nickTaken()
+        sendInfo({"info": "昵称已被占用"})
         disconnect()
     user_dict[request.sid] = {}
     user_dict[request.sid]['nick'] = nick
@@ -131,7 +127,8 @@ def handle_message(arg):
     iphash = user_dict[request.sid]['hash']
     score = len(text)
     if rl.frisk(iphash, score) or len(text) > 16384:
-        ratelimit()
+        #ratelimit()
+        sendInfo({"info": "您发送了太多消息，请稍后再试"})
     # todo: 指令
     elif text[0] == '/':
         command = text.split(' ')[0]
@@ -148,10 +145,6 @@ def handle_message(arg):
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
-
-@socketio.on('ratelimit', namespace='/room')
-def ratelimit():
-    emit('ratelimit', {"info": "您发送了太多消息，请稍后再试"})
 
 @socketio.on('info', namespace='/room')
 def sendInfo(data):

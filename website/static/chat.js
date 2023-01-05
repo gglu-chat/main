@@ -185,7 +185,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             }
         }
     })
-
+    /*
     socket.on('nickTaken', function(){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
@@ -201,7 +201,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.appendChild(document.createTextNode('◆ 您发送了太多消息，请稍后再试'));
         chatarea.insertBefore(recvbox, brick);
     })
-
+    */
     socket.on('foldmsg', function(arg){
         var nick_box = document.createElement('a');
         nick_box.classList.add('nick')
