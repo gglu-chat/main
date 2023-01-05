@@ -118,15 +118,17 @@ def handle_message(arg):
     arg = json.loads(str(json.dumps(arg)))
     arg['time'] = int(round(time.time() * 1000))
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
-    room = arg['room']
+    arg['room'] = user_dict[request.sid]['room']
+    arg['level'] = user_dict[request.sid]['level']
+    arg['nick'] = user_dict[request.sid]['nick']
     text = arg['mytext']
+    room = arg['room']
     level = arg['level']
 
     # 判断消息是否满足频率限制
     iphash = user_dict[request.sid]['hash']
     score = len(text)
     if rl.frisk(iphash, score) or len(text) > 16384:
-        #ratelimit()
         sendInfo({"info": "您发送了太多消息，请稍后再试"})
     # todo: 指令
     elif text[0] == '/':

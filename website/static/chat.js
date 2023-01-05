@@ -119,7 +119,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 if (txt != '' && txt != ' ' && socket.connected){
                     var ssid = socket.id;
                     // 向服务端发送message事件
-                    socket.emit('message', {"mytext": txt, "myid": ssid, "mynick": nick, "trip": trip, "room": myRoom, "level": level});
+                    socket.emit('message', {"type": "chat", "mytext": txt});
                     document.getElementById('chatbox').value = '';
                 }
             
