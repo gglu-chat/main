@@ -51,6 +51,9 @@ def getUserSid(nick):
             user_sid = i
     return user_sid
 
+def getUserDetails(nick):
+    """获取指定用户名的nick,room,trip,level,hash"""
+
 @socketio.on('connect', namespace='/room')
 def connect():
     emit('connected', {'info': 'connected:D', 'sid': request.sid})
@@ -135,7 +138,9 @@ def handle_message(arg):
         if command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
-                disconnect(getUserSid(target_nick))
+                target_sid = getUserSid(target_nick)
+                if level > user_dict[target_sid]['level']:
+                    disconnect(target_sid)
             except:
                 sendInfo({"info": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
