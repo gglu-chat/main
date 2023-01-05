@@ -133,11 +133,11 @@ def handle_message(arg):
     elif text[0] == '/':
         command = text.split(' ')[0]
         if command == '/kick' and level >= 3:
-            try:
+            #try:
                 target_nick = text.split(' ')[1]
                 disconnect(getUserSid(target_nick))
-            except:
-                sendInfo({"info": "请检查您的命令格式。"})
+            #except:
+                #sendInfo({"info": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
