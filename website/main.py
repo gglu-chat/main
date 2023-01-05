@@ -137,10 +137,10 @@ def handle_message(arg):
         if command == '/w':
             target_user = text.split(' ')[1]
             wmsg = text.split(' ')[2]
-            try:
-                whisper(target_user, wmsg)
-            except:
-                sendWarn({"warn": "请检查您的命令格式"})
+            #try:
+            whisper(target_user, wmsg)
+            #except:
+                #sendWarn({"warn": "请检查您的命令格式"})
         elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
