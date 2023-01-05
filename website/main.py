@@ -57,7 +57,8 @@ def disconnects():
 @socketio.on('leave', namespace='/room')
 def leave(datas):
     room = user_dict[request.sid]['room']
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': user_dict[request.sid]['nick']}, to=room)
+    nick = user_dict[request.sid]['nick']
+    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': nick}, to=room)
     leave_room(room)
 
 @socketio.on('nick_taken', namespace='/room')
@@ -104,6 +105,7 @@ def join(dt):
     user_dict[request.sid]['trip'] = trip
     user_dict[request.sid]['level'] = level
     user_dict[request.sid]['hash'] = iphash
+    print(user_dict)
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
