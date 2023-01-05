@@ -161,8 +161,8 @@ def sendWarn(data):
 
 @socketio.on('whisper', namespace='/room')
 def whisper(nick, text):
-    time = int(round(time.time() * 1000))
-    arg = {"type": "whisper", "text": text, "from": request.sid, "to": nick, "time": time}
+    arg = {"type": "whisper", "text": text, "from": request.sid, "to": nick}
+    arg['time'] = int(round(time.time() * 1000))
     emit('whisper', arg, to=getUserSid(nick))
 
 if __name__ == '__main__':
