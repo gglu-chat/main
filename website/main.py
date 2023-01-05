@@ -161,9 +161,10 @@ def sendWarn(data):
 
 @socketio.on('whisper', namespace='/room')
 def whisper(nick, text):
-    arg = {"type": "whisper", "text": text, "from": request.sid, "to": nick}
+    arg = {"type": "whisper", "text": text, "from": user_dict[request.sid]['nick'], "to": nick}
     arg['time'] = int(round(time.time() * 1000))
     emit('whisper', arg, to=getUserSid(nick))
+    emit('sendwmsg', arg, to=request.sid)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 15264))

@@ -219,11 +219,20 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
     socket.on('whisper', function(arg){
         var recvbox = document.createElement('div');
-        recvbox.classList.add('whisper');
+        recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(`◆ 收到${arg.nick}的私聊：${arg.text}`));
+        recvbox.appendChild(document.createTextNode(`◆ 收到${arg.from}的私聊：${arg.text}`));
         chatarea.insertBefore(recvbox, brick);
     })
+
+    socket.on('sendwmsg', function(arg){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');   
+        recvbox.appendChild(document.createTextNode(`◆ 向${arg.to}私聊：${arg.text}`));
+        chatarea.insertBefore(recvbox, brick);
+    })
+
 }
 else{
     // 昵称为空或不满足昵称要求的断开连接
