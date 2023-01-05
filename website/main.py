@@ -120,7 +120,8 @@ def handle_message(arg):
     arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
     arg['room'] = user_dict[request.sid]['room']
     arg['level'] = user_dict[request.sid]['level']
-    arg['nick'] = user_dict[request.sid]['nick']
+    arg['mynick'] = user_dict[request.sid]['nick']
+    arg['trip'] = user_dict[request.sid]['trip']
     text = arg['mytext']
     room = arg['room']
     level = arg['level']
