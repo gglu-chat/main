@@ -100,6 +100,7 @@ def join(dt):
     else:
         nickTaken()
         disconnect()
+    user_dict[request.sid] = {}
     user_dict[request.sid]['nick'] = nick
     user_dict[request.sid]['room'] = room
     user_dict[request.sid]['trip'] = trip
