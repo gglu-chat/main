@@ -212,16 +212,20 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('warn', function(data){
         var recvbox = document.createElement('div');
         recvbox.classList.add('warn');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(md.render(`◆ ${data.warn}`)));
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ ${data.warn}`);
+        recvbox.appendChild(text);
         chatarea.insertBefore(recvbox, brick);
     })
 
     socket.on('whisper', function(arg){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(md.render(`◆ 收到${arg.from}的私聊：${arg.text}`)));
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ 收到${arg.from}的私聊：${arg.text}`);
+        recvbox.appendChild(text);
         chatarea.insertBefore(recvbox, brick);
         document.getElementById('notify').play();
     })
@@ -229,8 +233,10 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('sendwmsg', function(arg){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(md.render(`◆ 向${arg.to}私聊：${arg.text}`)));
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ 向${arg.to}私聊：${arg.text}`);
+        recvbox.appendChild(text);
         chatarea.insertBefore(recvbox, brick);
     })
 

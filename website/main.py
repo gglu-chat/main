@@ -141,7 +141,7 @@ def handle_message(arg):
         command = text.split(' ')[0]
         if command == ('/h' or '/help'):
             sendWarn({"warn": all_commands})
-        if command == ('/w' or '/whisper'):
+        elif command == ('/w' or '/whisper'):
             target_user = text.split(' ')[1]
             wmsg = ' '.join(text.split(' ')[2:])
             try:
