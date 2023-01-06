@@ -155,7 +155,7 @@ def handle_message(arg):
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         elif command == '/h' or '/help':
-            sendWarn({"warn": all_commands})
+            sendWarn({"warn": "所有命令：\n /help：查看本命令帮助\n /w <昵称> <文字>：向目标用户私聊\n /kick <昵称>：断开目标用户的连接\n"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
