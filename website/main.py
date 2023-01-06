@@ -139,9 +139,7 @@ def handle_message(arg):
         sendWarn({"warn": "您发送了太多消息，请稍后再试"})
     elif text[0] == '/':
         command = text.split(' ')[0]
-        if command == '/h' or '/help':
-            sendWarn({"warn": all_commands})
-        elif command == '/w':
+        if command == '/w':
             target_user = text.split(' ')[1]
             wmsg = text.split(' ')[2]
             try:
@@ -156,6 +154,8 @@ def handle_message(arg):
                     disconnect(target_sid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+        elif command == '/h' or '/help':
+            sendWarn({"warn": all_commands})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
