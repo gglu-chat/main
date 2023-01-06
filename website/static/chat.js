@@ -223,6 +223,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var chatarea = document.getElementById('chatarea');   
         recvbox.appendChild(document.createTextNode(`◆ 收到${arg.from}的私聊：${arg.text}`));
         chatarea.insertBefore(recvbox, brick);
+        document.getElementById('notify').play();
     })
 
     socket.on('sendwmsg', function(arg){
