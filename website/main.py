@@ -170,8 +170,8 @@ def handle_message(arg):
                 target_userid = getUserSid(target_user)
                 target_hash = getUserDetails(target_user, 'hash')
                 rl.arrest(target_hash, target_hash)
+                emit('warn', {"warn": "%s封禁了%s，用户哈希：%s" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
                 emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"}, to=target_userid)
-                emit('warn', {"warn": "%s封禁了%s，用户hash`%s`" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
                 disconnect(target_userid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
@@ -179,7 +179,7 @@ def handle_message(arg):
             try:
                 unban_hash = text.split(' ')[1]
                 rl.pardon(unban_hash)
-                emit('warn', {"warn": "已解除%s的封禁" %(unban_hash)}, to=room)
+                emit('warn', {"warn": "已解除 %s 的封禁" %(unban_hash)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
