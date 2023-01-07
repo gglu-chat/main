@@ -188,10 +188,10 @@ def handle_message(arg):
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         elif command == '/move' and level >= 3:
-            try:
+            #try:
                 tg_nick = text.split(' ')[1]
                 tg_sid = getUserSid(tg_nick)
-                if text.split(' ')[2]:
+                if text.split(' ')[2:]:
                     tg_room = ' '.join(text.split(' ')[2:])
                 else:
                     tg_room = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
@@ -199,8 +199,8 @@ def handle_message(arg):
                     leave_room(room, sid=tg_sid)
                     emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室"} %(tg_nick, tg_room), to=room)
                     join_room(tg_room, sid=tg_sid)
-            except:
-                sendWarn({"warn": "请检查您的命令格式。"})
+            #except:
+                #sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
