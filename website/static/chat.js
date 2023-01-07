@@ -99,9 +99,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         }
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
-        var chatarea = document.getElementById('chatarea')    
-        recvbox.appendChild(document.createTextNode(`◆ ${dt.nick} 加入聊天室`));
-        chatarea.insertBefore(recvbox, brick)
+        var chatarea = document.getElementById('chatarea');
+        if (nick !== dt.nick){
+            recvbox.appendChild(document.createTextNode(`◆ ${dt.nick} 加入聊天室`));
+            chatarea.insertBefore(recvbox, brick)
+        }
         var user = document.createElement('a');
         user.textContent = dt.nick;
         var userLi = document.createElement('li');

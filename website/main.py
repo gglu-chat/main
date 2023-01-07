@@ -162,6 +162,7 @@ def handle_message(arg):
                 target_sid = getUserSid(target_nick)
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
+                emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         elif command == '/ban' and level >= 3:
