@@ -55,17 +55,17 @@ def getRoomUsers(room):
             room_users.append(user_dict[i]['nick'])
     return room_users
 
-def getUserSid(nick):
+def getUserSid(nick, room):
     """获取指定用户名的sid"""
     for i in user_dict:
-        if user_dict[i]['nick'] == nick:
+        if user_dict[i]['nick'] == nick and user_dict[i]['room'] == room:
             user_sid = i
     return user_sid
 
-def getUserDetails(nick, type):
-    """获取指定用户名的nick,room,trip,level,hash"""
+def getUserDetails(nick, room, type):
+    """获取指定用户名的nick,trip,level,hash"""
     for i in user_dict:
-        if user_dict[i]['nick'] == nick:
+        if user_dict[i]['nick'] == nick and user_dict[i]['room'] == room:
             return user_dict[i][type]
 
 @socketio.on('connect', namespace='/room')
@@ -162,7 +162,7 @@ def handle_message(arg):
         elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
-                target_sid = getUserSid(target_nick)
+                target_sid = getUserSid(target_nick, room)
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
                     emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
@@ -171,8 +171,8 @@ def handle_message(arg):
         elif command == '/ban' and level >= 3:
             try:
                 target_user = text.split(' ')[1]
-                target_userid = getUserSid(target_user)
-                target_hash = getUserDetails(target_user, 'hash')
+                target_userid = getUserSid(target_user, room)
+                target_hash = getUserDetails(target_user, room, 'hash')
                 if level > user_dict[target_userid]['level']:
                     rl.arrest(target_hash, target_hash)
                     emit('warn', {"warn": "%s封禁了%s，用户哈希：%s" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
@@ -190,7 +190,7 @@ def handle_message(arg):
         elif command == '/move' and level >= 3:
             try:
                 tg_nick = text.split(' ')[1]
-                tg_sid = getUserSid(tg_nick)
+                tg_sid = getUserSid(tg_nick, room)
                 if text.split(' ')[2:]:
                     tg_room = ' '.join(text.split(' ')[2:])
                 else:
@@ -215,7 +215,8 @@ def sendWarn(data):
 def whisper(nick, text):
     arg = {"type": "whisper", "text": text, "from": user_dict[request.sid]['nick'], "to": nick}
     arg['time'] = int(round(time.time() * 1000))
-    emit('whisper', arg, to=getUserSid(nick))
+    room = user_dict[request.sid]['room']
+    emit('whisper', arg, to=getUserSid(nick, room))
     emit('sendwmsg', arg, to=request.sid)
 
 if __name__ == '__main__':
