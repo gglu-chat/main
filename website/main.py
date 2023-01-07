@@ -32,6 +32,8 @@ all_commands = """所有命令：\n
 /help：查看本命令帮助\n
 /w <昵称> <文字>：向目标用户私聊\n
 /kick <昵称>：断开目标用户的连接\n
+/ban <昵称>：封禁目标用户\n
+/ban <哈希>：解除目标哈希的封禁
 """
 
 @app.route('/')
@@ -57,8 +59,11 @@ def getUserSid(nick):
             user_sid = i
     return user_sid
 
-def getUserDetails(nick):
+def getUserDetails(nick, type):
     """获取指定用户名的nick,room,trip,level,hash"""
+    for i in user_dict:
+        if user_dict[i]['nick'] == nick:
+            return user_dict[i][type]
 
 @socketio.on('connect', namespace='/room')
 def connect():
@@ -106,11 +111,14 @@ def join(dt):
         level = 1
     
     # 检测昵称是否重复
-    if dt['nick'] not in getRoomUsers(room):
+    if (dt['nick'] not in getRoomUsers(room)) and (not rl.frisk(iphash)):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
-        sendWarn({"warn": "昵称已被占用"})
+        if dt['nick'] in getRoomUsers(room):
+            sendWarn({"warn": "昵称已被占用"})
+        elif rl.frisk(iphash):
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
         disconnect()
     user_dict[request.sid] = {}
     user_dict[request.sid]['nick'] = nick
@@ -139,9 +147,9 @@ def handle_message(arg):
         sendWarn({"warn": "您发送了太多消息，请稍后再试"})
     elif text[0] == '/':
         command = text.split(' ')[0]
-        if command == ('/h' or '/help'):
+        if command == '/h' or command == '/help':
             sendWarn({"warn": all_commands})
-        elif command == ('/w' or '/whisper'):
+        elif command == '/w' or command == '/whisper':
             target_user = text.split(' ')[1]
             wmsg = ' '.join(text.split(' ')[2:])
             try:
@@ -154,6 +162,24 @@ def handle_message(arg):
                 target_sid = getUserSid(target_nick)
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
+            except:
+                sendWarn({"warn": "请检查您的命令格式。"})
+        elif command == '/ban' and level >= 3:
+            try:
+                target_user = text.split(' ')[1]
+                target_userid = getUserSid(target_user)
+                target_hash = getUserDetails(target_user, 'hash')
+                rl.arrest(target_hash, target_hash)
+                emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"}, to=target_userid)
+                emit('warn', {"warn": "%s封禁了%s，用户hash`%s`" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
+                disconnect(target_userid)
+            except:
+                sendWarn({"warn": "请检查您的命令格式。"})
+        elif command == '/unban' and level >= 3:
+            try:
+                unban_hash = text.split(' ')[1]
+                rl.pardon(unban_hash)
+                emit('warn', {"warn": "已解除%s的封禁" %(unban_hash)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
