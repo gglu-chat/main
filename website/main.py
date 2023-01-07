@@ -28,7 +28,7 @@ ipsalt = os.urandom(32)
 
 rl = RateLimiter()
 
-all_commands = """## 所有命令：\n
+all_commands = """**所有命令**：\n
 |命令格式|说明|等级|
 |--------|----|----|
 |/help、/h|查看所有命令|1|
