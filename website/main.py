@@ -36,6 +36,7 @@ all_commands = """**所有命令**：\n
 |/kick <昵称>|断开目标用户的连接|3|
 |/ban <昵称>|封禁目标用户|3|
 |/unban <哈希>|解除目标哈希的封禁|3|
+|/move <昵称> <房间(可选)>|将用户移动到随机/指定的房间。|3|
 """
 
 @app.route('/')
@@ -164,7 +165,7 @@ def handle_message(arg):
                 target_sid = getUserSid(target_nick)
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
-                emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
+                    emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         elif command == '/ban' and level >= 3:
@@ -172,10 +173,11 @@ def handle_message(arg):
                 target_user = text.split(' ')[1]
                 target_userid = getUserSid(target_user)
                 target_hash = getUserDetails(target_user, 'hash')
-                rl.arrest(target_hash, target_hash)
-                emit('warn', {"warn": "%s封禁了%s，用户哈希：%s" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
-                emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"}, to=target_userid)
-                disconnect(target_userid)
+                if level > user_dict[target_userid]['level']:
+                    rl.arrest(target_hash, target_hash)
+                    emit('warn', {"warn": "%s封禁了%s，用户哈希：%s" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
+                    emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"}, to=target_userid)
+                    disconnect(target_userid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         elif command == '/unban' and level >= 3:
@@ -183,6 +185,20 @@ def handle_message(arg):
                 unban_hash = text.split(' ')[1]
                 rl.pardon(unban_hash)
                 emit('warn', {"warn": "已解除 %s 的封禁" %(unban_hash)}, to=room)
+            except:
+                sendWarn({"warn": "请检查您的命令格式。"})
+        elif command == '/move' and level >= 3:
+            try:
+                tg_nick = text.split(' ')[1]
+                tg_sid = getUserSid(tg_nick)
+                if text.split(' ')[2]:
+                    tg_room = ' '.join(text.split(' ')[2:])
+                else:
+                    tg_room = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
+                if level > user_dict[tg_sid]['level']:
+                    leave_room(room, sid=tg_sid)
+                    emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室"} %(tg_nick, tg_room))
+                    join_room(tg_room, sid=tg_sid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
