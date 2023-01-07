@@ -197,7 +197,7 @@ def handle_message(arg):
                     tg_room = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
                 if level > user_dict[tg_sid]['level']:
                     leave_room(room, sid=tg_sid)
-                    emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室"} %(tg_nick, tg_room))
+                    emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室"} %(tg_nick, tg_room), to=room)
                     join_room(tg_room, sid=tg_sid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
