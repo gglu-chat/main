@@ -111,7 +111,7 @@ def join(dt):
         level = 1
     
     # 检测昵称是否重复
-    if (dt['nick'] not in getRoomUsers(room)) and (not rl.frisk(iphash)):
+    if (dt['nick'] not in getRoomUsers(room)) and (not rl.frisk(iphash, 0)):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
     else:
