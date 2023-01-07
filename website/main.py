@@ -117,7 +117,7 @@ def join(dt):
     else:
         if dt['nick'] in getRoomUsers(room):
             sendWarn({"warn": "昵称已被占用"})
-        elif rl.frisk(iphash):
+        elif rl.frisk(iphash, 0):
             sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
         disconnect()
     user_dict[request.sid] = {}
