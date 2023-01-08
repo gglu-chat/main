@@ -197,12 +197,11 @@ def handle_message(arg):
                 else:
                     tg_room = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
                 if level > user_dict[tg_sid]['level']:
+                    user_dict[tg_sid]['room'] == tg_room
                     leave_room(room, sid=tg_sid)
                     emit('leavechat', {'type': 'leave', 'sid': tg_nick, 'nick': tg_nick}, to=room)
                     emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室" %(tg_nick, tg_room)}, to=room)
                     join_room(tg_room, sid=tg_sid)
-                    user_dict[tg_sid]['room'] == tg_room
-                    emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": user_dict[tg_sid]['level'], "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash']}, to=tg_room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
