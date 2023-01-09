@@ -37,7 +37,7 @@ all_commands = """**所有命令**：\n
 |/ban <昵称>|封禁目标用户|3|
 |/unban <哈希>|解除目标哈希的封禁|3|
 |/move <昵称> <房间(可选)>|将用户移动到随机/指定的房间。|3|
-
+***
 其余帮助：[gglu聊天室帮助文档](https://bujijam.ga/docs/help-for-gglu)
 """
 
