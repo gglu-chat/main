@@ -146,6 +146,12 @@ def handle_message(arg):
     # 判断消息是否满足频率限制
     iphash = user_dict[request.sid]['hash']
     score = len(text)
+    try:
+        if rl.search(iphash)['arrested']:
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+            disconnect(request.sid)
+    except:
+        pass
     if rl.frisk(iphash, score) or len(text) > 16384:
         sendWarn({"warn": "您发送了太多消息，请稍后再试"})
     # 聊天命令
