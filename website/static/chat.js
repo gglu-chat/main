@@ -4,7 +4,7 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip, md, myNick, myRoom;
+let nick, onlineUsers, password, trip, md, myNick, myRoom, users;
 
 // 初始化markdown引擎
 md = new remarkable.Remarkable('full', {
@@ -67,9 +67,9 @@ trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(){
-            window.localStorage['nick_and_password'] = nick + '#' + password
-            var users = document.getElementById('users')
-            users.innerHTML = '';    
+            window.localStorage['nick_and_password'] = nick + '#' + password;
+            users = document.getElementById('users');
+            users.innerHTML = '';
             // 向服务端发送join事件
             socket.emit('join', {"type": "join", "nick": nick, "password": password, "room": myRoom});
     });
