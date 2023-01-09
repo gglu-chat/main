@@ -80,12 +80,14 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
-            if (dt.onlineUsers.length == 0){
-                recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
+            if (!dt.iskicked){
+                if (dt.onlineUsers.length == 0){
+                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
+                }
+                else{
+                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
+                }
             }
-            else{
-                recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
-            }    
             chatarea.insertBefore(recvbox, brick)
             // 向在线列表中添加用户
             dt.onlineUsers.forEach(item => {
