@@ -4,7 +4,7 @@
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
 var socket = io.connect(ws_url);
 
-let nick, onlineUsers, password, trip, md, myNick, myRoom;
+let nick, onlineUsers, password, trip, md, myNick, myRoom, users;
 
 // 初始化markdown引擎
 md = new remarkable.Remarkable('full', {
@@ -40,7 +40,7 @@ catch(e){
     myRoom = getRandomString(8)
     window.location.assign('http://' + document.domain + ':' + location.port + '/room?' + myRoom)
 }
-document.title = '?' + myRoom + ' - gglu聊天室';
+document.title = `?${myRoom} - gglu聊天室`;
 
 function getRandomString(length){
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -67,24 +67,27 @@ trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('connected', function(){
-            window.localStorage['nick_and_password'] = nick + '#' + password
+            window.localStorage['nick_and_password'] = nick + '#' + password;
+            users = document.getElementById('users');
+            users.innerHTML = '';
             // 向服务端发送join事件
             socket.emit('join', {"type": "join", "nick": nick, "password": password, "room": myRoom});
     });
 
     socket.on('joinchat', function(dt){
-        var users = document.getElementById('users')
         if (dt.nick == nick){
             trip = dt.trip
             var recvbox = document.createElement('div');
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
-            if (dt.onlineUsers.length == 0){
-                recvbox.appendChild(document.createTextNode('◆ 在线的用户：' + nick));
+            if (!dt.iskicked){
+                if (dt.onlineUsers.length == 0){
+                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
+                }
+                else{
+                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
+                }
             }
-            else{
-                recvbox.appendChild(document.createTextNode('◆ 在线的用户：'+dt.onlineUsers + ',' + nick));
-            }    
             chatarea.insertBefore(recvbox, brick)
             // 向在线列表中添加用户
             dt.onlineUsers.forEach(item => {
@@ -98,9 +101,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         }
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
-        var chatarea = document.getElementById('chatarea')    
-        recvbox.appendChild(document.createTextNode('◆ ' + dt.nick + ' 加入聊天室'));
-        chatarea.insertBefore(recvbox, brick)
+        var chatarea = document.getElementById('chatarea');
+        if (nick !== dt.nick){
+            recvbox.appendChild(document.createTextNode(`◆ ${dt.nick} 加入聊天室`));
+            chatarea.insertBefore(recvbox, brick)
+        }
         var user = document.createElement('a');
         user.textContent = dt.nick;
         var userLi = document.createElement('li');
@@ -114,12 +119,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             if (event.keyCode == 13 && !event.shiftKey){
                 event.preventDefault();
                 var txt = document.getElementById('chatbox').value;
-                if (txt != '' && txt != ' ' && socket.connected){
-                    var ssid = socket.id;
+                if (txt && typeof txt === 'string' && socket.connected){
                     // 向服务端发送message事件
-                    socket.emit('message', {"mytext": txt, "myid": ssid, "mynick": nick, "trip": trip, "room": myRoom});
-                    document.getElementById('chatbox').value = '';
+                    socket.emit('message', {"type": "chat", "mytext": txt});
                 }
+                document.getElementById('chatbox').value = '';
             
             }
         };
@@ -133,7 +137,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.classList.add('nick')
             nick_box.classList.add('hint--bottom-right')
             var date = new Date(arg.time)
-            nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+            nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             //消息部分
@@ -158,7 +162,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
 
             // 点击昵称在输入框内插入`@someone`
             nick_box.onclick = function (e) {
-                insertAtCursor("@" + e.target.innerHTML + " ");
+                insertAtCursor(`@${e.target.innerHTML} `);
                 document.getElementById('chatbox').focus();
             }
 
@@ -170,7 +174,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode('◆ ' + datas.nick + ' 退出聊天室'));
+        recvbox.appendChild(document.createTextNode(`◆ ${datas.nick} 退出聊天室`));
         chatarea.insertBefore(recvbox, brick);
 
         var users = document.getElementById('users')
@@ -184,28 +188,12 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         }
     })
 
-    socket.on('nickTaken', function(){
-        var recvbox = document.createElement('div');
-        recvbox.classList.add('info');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode('◆ 昵称已被占用'));
-        chatarea.insertBefore(recvbox, brick);
-    })
-
-    socket.on('ratelimit', function(){
-        var recvbox = document.createElement('div');
-        recvbox.classList.add('info');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode('◆ 您发送了太多消息，请稍后再试'));
-        chatarea.insertBefore(recvbox, brick);
-    })
-
     socket.on('foldmsg', function(arg){
         var nick_box = document.createElement('a');
         nick_box.classList.add('nick')
         nick_box.classList.add('hint--bottom-right')
         var date = new Date(arg.time)
-        nick_box.setAttribute('aria-label', 'trip:' + arg.trip + '\n' + date.toLocaleString())
+        nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
         var your_nick = document.createTextNode(arg.mynick);
         nick_box.append(your_nick)
 
@@ -224,12 +212,44 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.appendChild(details);
         chatarea.insertBefore(recvbox, brick);
     })
+
+    socket.on('warn', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('warn');
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ ${data.warn}`);
+        recvbox.appendChild(text);
+        chatarea.insertBefore(recvbox, brick);
+    })
+
+    socket.on('whisper', function(arg){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ 收到${arg.from}的私聊：${arg.text}`);
+        recvbox.appendChild(text);
+        chatarea.insertBefore(recvbox, brick);
+        document.getElementById('notify').play();
+    })
+
+    socket.on('sendwmsg', function(arg){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var text = document.createElement('p');
+        text.innerHTML = md.render(`◆ 向${arg.to}私聊：${arg.text}`);
+        recvbox.appendChild(text);
+        chatarea.insertBefore(recvbox, brick);
+    })
+
 }
 else{
     // 昵称为空或不满足昵称要求的断开连接
     socket.disconnect();
     var recvbox = document.createElement('div');
-    recvbox.classList.add('info');
+    recvbox.classList.add('warn');
     var chatarea = document.getElementById('chatarea');   
     recvbox.appendChild(document.createTextNode('◆ 昵称只能包含字母、数字以及下划线，且长度不超过12'));
     chatarea.insertBefore(recvbox, brick);

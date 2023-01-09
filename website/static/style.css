@@ -22,6 +22,9 @@ body {
 .info {
     word-wrap: break-word;
 }
+.warn {
+    word-wrap: break-word;
+}
 .nick {
     font-weight: 700;
 }
