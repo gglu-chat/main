@@ -11,7 +11,7 @@ md = new remarkable.Remarkable('full', {
     html: false,
 	xhtmlOut: false,
 	breaks: true,
-	langPrefix: 'language-',
+	langPrefix: 'hljs language-',
 	linkTarget: '_blank" rel="noreferrer',
 	typographer:  true,
 	quotes: `""''`,
