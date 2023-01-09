@@ -22,8 +22,8 @@
                 </svg>
             </button>
             <div id="onlineBox" class="hidden" tabindex="0">
-                <button id="clear"><i class="fa-solid fa-trash-can"></i>清空所有消息</button>
-                <br/>
+                <button id="clear"><i class="fa-solid fa-trash-can"></i>清空所有消息</button><br/>
+                <button id="light"><i class="fa-solid fa-sun">阴间模式</i></button><br />
                 <button id="moreSettings"><i class="fa-solid fa-gear"></i>更多设置</button>
                 <hr/>
                 <h3>在线列表</h3>
@@ -57,8 +57,10 @@
             settingBtn = document.querySelector('#moreSettings')
             settingBox = document.querySelector('.modal'),
             closeBtn = document.querySelector('#close'),
-            popBackgroundArea = document.querySelector('.popBackground');
+            popBackgroundArea = document.querySelector('.popBackground'),
+            lightBtn = document.querySelector('#light');
 
+            // 右上角菜单栏
             menuBtn.onclick = () =>{
                 if (popup.classList.contains('hidden')){
                     popup.classList.remove('hidden');
@@ -69,7 +71,7 @@
                     popup.classList.add('hidden')
                 }
             }
-
+            // 更多设置的弹窗
             settingBtn.onclick = () =>{
                 popBackgroundArea.style.opacity = 1
                 popBackgroundArea.classList.toggle('showing')
@@ -78,11 +80,12 @@
                 popBackgroundArea.style.opacity = 0
                 setTimeout("popBackgroundArea.classList.toggle('showing')", 200)
             }
-
+            // 点击侧边栏后在点击其他位置关掉侧边栏
             popup.onblur = () =>{
                 popup.classList.remove('show');
-                popup.classList.add('hidden')
+                popup.classList.add('hidden');
             }
+            // 清空消息
             clearBtn.onclick = () =>{
                 var chatarea = document.querySelector('#chatarea')
                 chatarea.innerHTML = '';
@@ -90,6 +93,11 @@
                 brick.setAttribute('id', 'brick');
                 brick.style.height = '4.5rem';
                 chatarea.appendChild(brick);
+            }
+            // 阴间模式
+            lightBtn.onclick = () =>{
+                var all = document.querySelector('html');
+                all.classList.toggle('dark');
             }
         </script>
         <script src="../static/chat.js"></script>
