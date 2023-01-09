@@ -11,11 +11,25 @@ md = new remarkable.Remarkable('full', {
     html: false,
 	xhtmlOut: false,
 	breaks: true,
-	langPrefix: '',
+	langPrefix: 'language-',
 	linkTarget: '_blank" rel="noreferrer',
 	typographer:  true,
-	quotes: `""''`
-}).use(remarkable.linkify);
+	quotes: `""''`,
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return hljs.highlight(lang, str).value;
+          } catch (err) {}
+        }
+    
+        try {
+          return hljs.highlightAuto(str).value;
+        } catch (err) {}
+    
+        return '';
+      }
+    }
+).use(remarkable.linkify);
 
 myNick = window.localStorage['nick_and_password']
 // 当`?`后面有内容时(输入了房间名)弹出对话框
