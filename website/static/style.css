@@ -118,6 +118,7 @@ button {
     background-color: transparent;
     padding: 0;
     font-size: 16px;
+    margin-bottom: 5px
 }
 #menu {     /*菜单按钮*/
     position: absolute;
@@ -216,4 +217,8 @@ header {
 }
 .foldmsg {
     background-color: #eeeeee45;
+}
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
