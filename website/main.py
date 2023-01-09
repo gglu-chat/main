@@ -202,7 +202,7 @@ def handle_message(arg):
                     emit('leavechat', {'type': 'leave', 'sid': tg_nick, 'nick': tg_nick}, to=room)
                     emit('warn', {"warn": "已将 %s 移动到了 %s 聊天室" %(tg_nick, tg_room)}, to=room)
                     join_room(tg_room, sid=tg_sid)
-                    user_dict[tg_sid]['room'] == tg_room
+                    user_dict[tg_sid]['room'] = tg_room
                     print(206, user_dict[tg_sid]['room'])
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
