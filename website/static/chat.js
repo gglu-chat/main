@@ -117,7 +117,14 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.classList.add('info')
         var chatarea = document.getElementById('chatarea');
         if (nick !== dt.nick){
-            recvbox.appendChild(document.createTextNode(`◆ ${dt.nick} 加入聊天室`));
+            var span_box = document.createElement('span');
+            var rhombus = document.createElement('a');
+            rhombus.classList.add('hint--bottom-right')
+            rhombus.setAttribute('aria-label', `trip:${dt.trip}\n${dt.time}`)
+            rhombus.append('◆')
+            span_box.append(rhombus)
+            span_box.append(` ${dt.nick} 加入聊天室`)
+            recvbox.appendChild(span_box);
             chatarea.insertBefore(recvbox, brick)
         }
         var user = document.createElement('a');
@@ -157,7 +164,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.append(your_nick)
             if (arg.level >= 3){
                 span_box.append(nick_box)
-                span_box.append('⭐')
+                span_box.append(' ⭐')
             } else {
                 span_box.append(nick_box)
             }

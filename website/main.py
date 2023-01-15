@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
 import json
@@ -93,6 +93,7 @@ def join(dt):
     nick = dt['nick']
     room = dt['room']
     password = dt['password']
+    _time = int(round(time.time() * 1000))
     # 密码不为空时加密，为空时trip直接赋值'null'
     if password != '':
         sha256 = hashlib.sha256()
@@ -118,7 +119,7 @@ def join(dt):
     # 检测昵称是否重复
     if (dt['nick'] not in getRoomUsers(room)) and (not rl.frisk(iphash, 0)):
         join_room(room)
-        emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash}, to=room)
+        emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash, "time": _time}, to=room)
     else:
         if dt['nick'] in getRoomUsers(room):
             sendWarn({"warn": "昵称已被占用"})
