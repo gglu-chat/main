@@ -120,7 +120,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var span_box = document.createElement('span');
             var rhombus = document.createElement('a');
             rhombus.classList.add('hint--bottom-right')
-            rhombus.setAttribute('aria-label', `trip:${dt.trip}\n${dt.time}`)
+            var date = new Date(arg.time)
+            rhombus.setAttribute('aria-label', `trip:${dt.trip}\n${date.toLocaleString()}`)
             rhombus.append('◆')
             span_box.append(rhombus)
             span_box.append(` ${dt.nick} 加入聊天室`)
@@ -201,8 +202,16 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     socket.on('leavechat', function(datas){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
-        var chatarea = document.getElementById('chatarea');   
-        recvbox.appendChild(document.createTextNode(`◆ ${datas.nick} 退出聊天室`));
+        var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(arg.time)
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
+        span_box.append(` ${dt.nick} 退出聊天室`)
+        recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
 
         var users = document.getElementById('users')
