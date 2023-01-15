@@ -210,7 +210,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
-        span_box.append(` ${dt.nick} 退出聊天室`)
+        span_box.append(` ${datas.nick} 退出聊天室`)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
 
