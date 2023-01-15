@@ -84,7 +84,8 @@ def disconnects():
 def leave(datas):
     room = user_dict[request.sid]['room']
     nick = user_dict[request.sid]['nick']
-    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': nick}, to=room)
+    _time = int(round(time.time() * 1000))
+    emit('leavechat', {'type': 'leave', 'sid': request.sid, 'nick': nick, 'time': _time}, to=room)
     leave_room(room)
 
 @socketio.on('join', namespace='/room')

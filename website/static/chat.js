@@ -120,7 +120,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var span_box = document.createElement('span');
             var rhombus = document.createElement('a');
             rhombus.classList.add('hint--bottom-right')
-            var date = new Date(arg.time)
+            var date = new Date(dt.time)
             rhombus.setAttribute('aria-label', `trip:${dt.trip}\n${date.toLocaleString()}`)
             rhombus.append('◆')
             span_box.append(rhombus)
@@ -206,7 +206,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var span_box = document.createElement('span');
         var rhombus = document.createElement('a');
         rhombus.classList.add('hint--bottom-right')
-        var date = new Date(arg.time)
+        var date = new Date(datas.time)
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
