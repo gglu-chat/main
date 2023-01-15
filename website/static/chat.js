@@ -147,6 +147,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var recvbox = document.createElement('div');
             recvbox.classList.add('message');
             // 昵称部分
+            var span_box = document.createElement('span');
             var nick_box = document.createElement('a');
             nick_box.classList.add('nick')
             nick_box.classList.add('hint--bottom-right')
@@ -154,6 +155,12 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
+            if (arg.level >= 3){
+                span_box.append(nick_box)
+                span_box.append('⭐')
+            } else {
+                span_box.append(nick_box)
+            }
             //消息部分
             var text = document.createElement('div');
             text.innerHTML = md.render(arg.mytext)
@@ -161,7 +168,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var chatarea = document.getElementById('chatarea');
             var brick = document.getElementById('brick');
             if (arg.msg_id != msg_id){
-                recvbox.appendChild(nick_box);
+                recvbox.appendChild(span_box);
                 recvbox.appendChild(text);
                 chatarea.insertBefore(recvbox, brick)
                 // 每发一条消息，滚动条就滚动到底部
