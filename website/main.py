@@ -1,5 +1,5 @@
-import eventlet
 from flask import Flask, render_template, request
+import eventlet
 from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
 import json
@@ -11,7 +11,6 @@ import yaml
 from ratelimiter import RateLimiter
 
 app = Flask(__name__)
-app.secret_key = 'haeFrbvHjyghragkhAEgRGRryureagAERVRAgef'
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
