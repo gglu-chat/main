@@ -1,5 +1,4 @@
 import eventlet
-eventlet.monkey_patch()
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room, disconnect
 import os
@@ -237,5 +236,6 @@ def whisper(nick, text):
     emit('sendwmsg', arg, to=request.sid)
 
 if __name__ == '__main__':
+    eventlet.monkey_patch()
     port = int(os.environ.get('PORT', 15264))
     socketio.run(app, host='0.0.0.0', port=port)
