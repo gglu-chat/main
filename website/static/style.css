@@ -1,5 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 html {
     height: 100%;
+    overflow-y: hidden;
+}
+.dark {
+    filter: invert(1) hue-rotate(180deg);
 }
 body {
     max-width: 50em;
@@ -7,35 +16,43 @@ body {
     overflow-y: hidden;
     height: 100%;
     font-family: Consolas, 'Courier New', 'Microsoft YaHei', monospace;
-    background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
 }
 .message {
     word-wrap: break-word;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
 }
+.info {
+    word-wrap: break-word;
+}
+.warn {
+    word-wrap: break-word;
+}
 .nick {
     font-weight: 700;
 }
 textarea {
-    height: 50px;
+    justify-content: center;
+    height: 55px;
     position: fixed;
     bottom: 0;
-    width: 50rem;
+    max-width: 50rem !important;
+    width: 100%;
+    overflow: auto;
     resize: none;
     box-sizing: border-box;
     padding: 0.5em;
     background: none;
     border:3px #e3e3e3 dashed;
     outline: none;
-    background-color: #fffafa25;
+    background-color: #fffafa30;
 }
 article {
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border-radius: 2em 2em 0em 0em;
     background-color: rgba(255, 255, 255, 0.3);
-    height: 90%;
+    height: 100%;
     border: 1em;
     padding-top: 2.5em;
     padding-left: 1em;
@@ -66,7 +83,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 a {
-    color: #426666;
     text-decoration: none;
     cursor: pointer;
 }
@@ -74,11 +90,128 @@ blockquote {
     padding: 3px 10px;
     margin: 3px;
     border-left: 5px solid #455656;
+    background-color: #eeeeee45;
 }
 code {
     padding: .2em .4em;
     margin: 0;
-    font-size: 85%;
+    font-size: 95%;
     background-color: rgba(27,31,35,.15);
     border-radius: 3px;
+}
+pre {
+    display: block;
+    white-space: break-spaces;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+img {
+    max-width: 50%;
+    max-height: 800px;
+}
+button {
+    outline: 0;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    font-size: 16px;
+    margin-bottom: 5px
+}
+#menu {     /*菜单按钮*/
+    position: absolute;
+    z-index: 10;
+    right: 0px;
+    top: 0px;
+    background-color: transparent;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-bottom-left-radius: 100%;
+}
+#moreSettings {
+    border-radius: 0em 0em 1em 1em;
+}
+.show {
+    visibility: visible;
+    position: absolute;
+    overflow-y: auto;
+    z-index: 11;
+    right: 10px;
+    top: 60px;
+    border-radius: 1em;
+    width: 12em;
+    padding: 0.5em;
+    max-height: 550px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+    transition: opacity 0.2s 0s ease-in-out;
+    opacity: 1;
+}
+.show::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    background-color: #a9a9a9;
+}
+.show::-webkit-scrollbar-track{
+    background-color: #dcdcdc;
+    border-radius: 5px;
+}
+.show::-webkit-scrollbar-thumb{
+    background-color: #a9a9a9;
+    border-radius: 5px;
+}
+.show::-webkit-scrollbar-thumb:hover{
+    background-color: #808080;
+}
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+ul {
+    padding-inline-start: 20px;
+}
+.popBackground {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    will-change: opacity;
+    z-index: 12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.434);
+    transition: opacity 0.2s 0s ease-in-out;
+    opacity: 0;
+}
+.popBackground.showing {
+    visibility: visible;
+    opacity: 1;
+}
+.modal{
+    width: 40em;
+    height: auto;
+    margin: 1em;
+    border-radius: 1em 1em 1em 1em;
+    padding: 1em;
+    box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.foldmsg {
+    background-color: #eeeeee45;
+}
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

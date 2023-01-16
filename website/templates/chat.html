@@ -7,26 +7,51 @@
         <link id="colorscheme-link" rel="stylesheet" href="../static/color_scheme/default.css" type="text/css">
         <link rel="icon" href="https://s1.ax1x.com/2022/10/01/xuzw4K.png">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.7.0/hint.min.css">
-        <title>chatroom</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/base16/dracula.min.css">
+        <title>gglu聊天室</title>
         <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <script src="../static/vendor/remarkable.min.js"></script>
     </head>
     <body>
-        <!--
-        <select id="colorscheme-selector" style="position: fixed; right: 0em;">
-            <option value="fresh-green">fresh-green</option>
-            <option value="night-dark">night-dark</option>
-        </select>
-        -->
+        <nav style="height: 2em;">
+            <button id="menu" aria-label="查看在线用户">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width: 50;height: 50;">
+                    <path d="M10 18 h30 v-2 H10 v2 z m0 -5 h30 v-2 H10 v2 z m0 -7 v2 h30 V6 H10 z" fill="white" />
+                </svg>
+            </button>
+            <div id="onlineBox" class="hidden" tabindex="0">
+                <h2><a href="/" target="_blank">gglu聊天室</a></h2><hr/>
+                <button id="clear"><i class="fa-solid fa-trash-can"></i>清空所有消息</button><br/>
+                <button id="light"><i class="fa-solid fa-moon"></i>阴间模式</button><br/>
+                <input id="soundBox" type="checkbox"><label for="soundBox">被@时播放提示音</label><br/>
+                <button id="moreSettings"><i class="fa-solid fa-gear"></i>更多设置</button><hr/>
+                <h3>在线列表</h3>
+                <div id="content">
+                    <ul id="users"></ul>
+                </div>
+            </div>
+        </nav>
         <audio style="display: none;" id="notify" preload="auto" src="../static/notify.mp3">
             <source src="../static/notify.mp3" type="audio/ogg">
         </audio>
-        <div style="height: 2em;"></div>
         <article id="chatarea">
-            <div id="brick" style="height: 4.5rem;"></div>
+            <div id="brick" style="height: 6rem;"></div>
         </article>
         <div>
             <textarea id="chatbox" type="text" autocomplete="off" autofocus></textarea>
+        </div>
+        <div class="popBackground">
+            <div class="modal">
+                <header>
+                    <h2>更多设置</h2><div id="close" style="font-size: 30px;cursor: pointer;">&times;</div>
+                </header>
+                </br>
+                <h3>其他</h3>
+                <p>版本：v1.1.0</p>
+                <p><a href="https://blog.bujijam.ga/about/#%E6%94%AF%E6%8C%81" target="_blank"><i class="fa-solid fa-heart"></i>觉得小站做得不错？捐赠通道在此</a></p>
+            </div>
         </div>
         <script src="../static/chat.js"></script>
     </body>

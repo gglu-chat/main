@@ -1,0 +1,12 @@
+levels:
+  # 站长
+  4: HdYea8
+  # 管理员
+  3:
+    - iZbyEc
+    - 42vvwE
+  # 成员
+  2:
+    - trip3
+    - trip4
+  # 1为用户
