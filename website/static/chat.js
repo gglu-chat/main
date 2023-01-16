@@ -121,11 +121,6 @@ closeBtn.onclick = () =>{
     popBackgroundArea.style.opacity = 0
     setTimeout("popBackgroundArea.classList.toggle('showing')", 200)
 }
-// 点击侧边栏后在点击其他位置关掉侧边栏
-popup.onblur = () =>{
-    popup.classList.remove('show');
-    popup.classList.add('hidden');
-}
 // 清空消息
 clearBtn.onclick = () =>{
     var chatarea = document.querySelector('#chatarea')
@@ -146,9 +141,9 @@ soundBox.addEventListener('change', (event) => {
 	window.localStorage['notify-sound'] = soundBox.checked;
 })
 var notifySetting = window.localStorage['notify-sound'];
-if (notifySetting === true){
+if (notifySetting === true || notifySetting === 'true'){
     soundBox.checked = true
-} else if (notifySetting === false){
+} else if (notifySetting === false || notifySetting === 'false'){
     soundBox.checked = false
 }
 

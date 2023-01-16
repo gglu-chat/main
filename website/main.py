@@ -210,7 +210,7 @@ def handle_message(arg):
                 if level > tg_level:
                     leave_room(room, sid=tg_sid)
                     emit('leavechat', {'type': 'leave', 'sid': tg_nick, 'nick': tg_nick}, to=room)
-                    emit('warn', {"warn": "已将 ?%s 移动到了 ?%s 聊天室" %(tg_nick, tg_room)}, to=room)
+                    emit('warn', {"warn": "已将 %s 移动到了 ?%s 聊天室" %(tg_nick, tg_room)}, to=room)
                     join_room(tg_room, sid=tg_sid)
                     user_dict[tg_sid]['room'] = tg_room
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)

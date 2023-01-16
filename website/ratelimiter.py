@@ -8,6 +8,10 @@ class RateLimiter:
         self.hashes = hashes
 
     def search(self, id):
+        """Finding current score by `id`.
+        
+        :param id: target sid / hash
+        """
         try:
             record = self.records[id]
         except:
@@ -41,11 +45,20 @@ class RateLimiter:
         return False
 
     def arrest(self, id, hash):
+        """Blocking users from joining any room / sending messages.
+        
+        :param id: target sid / hash
+        :param hash: target hash
+        """
         record = self.search(id)
         record['arrested'] = True
         self.hashes[hash] = id
 
     def pardon(self, id):
+        """Unblock users.
+        
+        :param id: target sid / hash
+        """
         targetId = id
         try:
             type(self.hashes[targetId])
@@ -55,5 +68,6 @@ class RateLimiter:
         record['arrested'] = False
 
     def clear(self):
+        """Clear all records."""
         self.records = {}
         self.hashes = {}
