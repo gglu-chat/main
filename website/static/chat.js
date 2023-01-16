@@ -31,6 +31,23 @@ md = new remarkable.Remarkable('full', {
     }
 ).use(remarkable.linkify);
 
+md.renderer.rules.text = function(tokens, idx) {
+	tokens[idx].content = Remarkable.utils.escapeHtml(tokens[idx].content);
+
+	if (tokens[idx].content.indexOf('?') !== -1) {
+		tokens[idx].content = tokens[idx].content.replace(/(^|\s)(\?)\S+?(?=[,.!?:)]?\s|$)/gm, function(match) {
+			var roomLink = Remarkable.utils.escapeHtml(Remarkable.utils.replaceEntities(match.trim()));
+			var whiteSpace = '';
+			if (match[0] !== '?') {
+				whiteSpace = match[0];
+			}
+			return whiteSpace + '<a href="' + roomLink + '" target="_blank">' + roomLink + '</a>';
+		});
+	}
+
+  return tokens[idx].content;
+};
+
 myNick = window.localStorage['nick_and_password']
 // 当`?`后面有内容时(输入了房间名)弹出对话框
 if (window.location.search != ''){
@@ -39,8 +56,7 @@ if (window.location.search != ''){
         var well_index = nick.indexOf('#')
         password = nick.slice(well_index + 1)
         nick = nick.slice(0,well_index)
-    }
-    else{
+    } else {
         password = ''
     }
 }
@@ -97,8 +113,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             if (!dt.iskicked){
                 if (dt.onlineUsers.length == 0){
                     recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
-                }
-                else{
+                } else {
                     recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
                 }
             }
@@ -281,8 +296,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         chatarea.insertBefore(recvbox, brick);
     })
 
-}
-else{
+} else {
     // 昵称为空或不满足昵称要求的断开连接
     socket.disconnect();
     var recvbox = document.createElement('div');
