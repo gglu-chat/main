@@ -32,11 +32,11 @@ md = new remarkable.Remarkable('full', {
 ).use(remarkable.linkify);
 
 md.renderer.rules.text = function(tokens, idx) {
-	tokens[idx].content = Remarkable.utils.escapeHtml(tokens[idx].content);
+	tokens[idx].content = remarkable.utils.escapeHtml(tokens[idx].content);
 
 	if (tokens[idx].content.indexOf('?') !== -1) {
 		tokens[idx].content = tokens[idx].content.replace(/(^|\s)(\?)\S+?(?=[,.!?:)]?\s|$)/gm, function(match) {
-			var roomLink = Remarkable.utils.escapeHtml(Remarkable.utils.replaceEntities(match.trim()));
+			var roomLink = remarkable.utils.escapeHtml(remarkable.utils.replaceEntities(match.trim()));
 			var whiteSpace = '';
 			if (match[0] !== '?') {
 				whiteSpace = match[0];
