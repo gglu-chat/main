@@ -93,6 +93,59 @@ function insertAtCursor(text) {
 	input.selectionStart = input.selectionEnd = before.length;
 }
 
+const menuBtn = document.querySelector('#menu'),
+popup = document.querySelector('#onlineBox'),
+clearBtn = document.querySelector('#clear'),
+settingBtn = document.querySelector('#moreSettings')
+closeBtn = document.querySelector('#close'),
+popBackgroundArea = document.querySelector('.popBackground'),
+lightBtn = document.querySelector('#light');
+
+// 右上角菜单栏
+menuBtn.onclick = () =>{
+    if (popup.classList.contains('hidden')){
+        popup.classList.remove('hidden');
+        popup.classList.add('show');
+    }
+    else{
+        popup.classList.remove('show');
+        popup.classList.add('hidden')
+    }
+}
+// 更多设置的弹窗
+settingBtn.onclick = () =>{
+    popBackgroundArea.style.opacity = 1
+    popBackgroundArea.classList.toggle('showing')
+}
+closeBtn.onclick = () =>{
+    popBackgroundArea.style.opacity = 0
+    setTimeout("popBackgroundArea.classList.toggle('showing')", 200)
+}
+// 点击侧边栏后在点击其他位置关掉侧边栏
+popup.onblur = () =>{
+    popup.classList.remove('show');
+    popup.classList.add('hidden');
+}
+// 清空消息
+clearBtn.onclick = () =>{
+    var chatarea = document.querySelector('#chatarea')
+    chatarea.innerHTML = '';
+    var brick = document.createElement('div');
+    brick.setAttribute('id', 'brick');
+    brick.style.height = '4.5rem';
+    chatarea.appendChild(brick);
+}
+// 阴间模式
+lightBtn.onclick = () =>{
+    var all = document.querySelector('html');
+    all.classList.toggle('dark');
+}
+// 提示音复选框
+var soundBox = document.querySelector('#soundBox')
+soundBox.addEventListener('change', (event) => {
+	window.localStorage['notify-sound'] = soundBox.checked;
+})
+
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
@@ -200,7 +253,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             msg_id = arg.msg_id
 
             // `@someone`播放提示音
-            if (arg.mytext.includes('@' + nick)){
+            if (arg.mytext.includes('@' + nick) && soundBox.checked){
                 document.getElementById('notify').play();
             }
 
