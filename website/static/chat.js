@@ -279,9 +279,17 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(arg.time)
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
         var text = document.createElement('p');
-        text.innerHTML = md.render(`◆ 收到${arg.from}的私聊：${arg.text}`);
-        recvbox.appendChild(text);
+        text.innerHTML = md.render(` 收到${arg.from}的私聊：${arg.text}`);
+        span_box.append(text)
+        recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
         document.getElementById('notify').play();
     })
@@ -290,9 +298,17 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var recvbox = document.createElement('div');
         recvbox.classList.add('info');
         var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(arg.time)
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
         var text = document.createElement('p');
-        text.innerHTML = md.render(`◆ 向${arg.to}私聊：${arg.text}`);
-        recvbox.appendChild(text);
+        text.innerHTML = md.render(` 向${arg.to}私聊：${arg.text}`);
+        span_box.append(text)
+        recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
     })
 
