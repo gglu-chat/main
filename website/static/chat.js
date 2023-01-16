@@ -145,6 +145,12 @@ var soundBox = document.querySelector('#soundBox')
 soundBox.addEventListener('change', (event) => {
 	window.localStorage['notify-sound'] = soundBox.checked;
 })
+var notifySetting = window.localStorage['notify-sound'];
+if (notifySetting === true){
+    soundBox.checked = true
+} else if (notifySetting === false){
+    soundBox.checked = false
+}
 
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
