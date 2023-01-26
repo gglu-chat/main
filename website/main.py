@@ -234,6 +234,16 @@ def whisper(nick, text):
     emit('whisper', arg, to=getUserSid(nick, room))
     emit('sendwmsg', arg, to=request.sid)
 
+@socketio.on('invite', namespace='/room')
+def handle_invite(data):
+    data['time'] = int(round(time.time() * 1000))
+    data['inviteRoom'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
+    data['from'] = user_dict[request.sid]['nick']
+    to_nick = data['to']
+    room = user_dict[request.sid]['room']
+    emit('invite', data, to=getUserSid(to_nick, room))
+    emit('sendinvite', data, to=request.sid)
+
 if __name__ == '__main__':
     eventlet.monkey_patch()
     port = int(os.environ.get('PORT', 15264))

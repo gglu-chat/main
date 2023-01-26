@@ -72,6 +72,7 @@ catch(e){
 }
 document.title = `?${myRoom} - gglu聊天室`;
 
+
 function getRandomString(length){
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     var len = length;
@@ -93,6 +94,8 @@ function insertAtCursor(text) {
 	input.selectionStart = input.selectionEnd = before.length;
 }
 
+
+/*侧边栏部分*/
 const menuBtn = document.querySelector('#menu'),
 popup = document.querySelector('#onlineBox'),
 clearBtn = document.querySelector('#clear'),
@@ -147,6 +150,7 @@ if (notifySetting === true || notifySetting === 'true'){
     soundBox.checked = false
 }
 
+
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
@@ -191,7 +195,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 var userLi = document.createElement('li');
                 userLi.appendChild(user);
                 users.appendChild(userLi);
-            });    
+                // 点击昵称发送邀请
+                user.onclick = function(e){
+                    socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
+                }
+            });
         }
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
@@ -372,6 +380,42 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         span_box.append(rhombus)
         var text = document.createElement('p');
         text.innerHTML = md.render(` 向${arg.to}私聊：${arg.text}`);
+        span_box.append(text)
+        recvbox.appendChild(span_box);
+        chatarea.insertBefore(recvbox, brick);
+    })
+
+    socket.on('invite', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(data.time);
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
+        var text = document.createElement('p');
+        text.innerHTML = ` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`;
+        span_box.append(text)
+        recvbox.appendChild(span_box);
+        chatarea.insertBefore(recvbox, brick);
+    })
+
+    socket.on('sendinvite', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(data.time);
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
+        var text = document.createElement('p');
+        text.innerHTML = ` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`;
         span_box.append(text)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
