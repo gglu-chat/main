@@ -243,8 +243,21 @@ def handle_invite(data):
     data['from'] = user_dict[request.sid]['nick']
     to_nick = data['to']
     room = user_dict[request.sid]['room']
-    emit('invite', data, to=getUserSid(to_nick, room))
-    emit('sendinvite', data, to=request.sid)
+    iphash = user_dict[request.sid]['hash']
+    try:
+        if rl.search(iphash)['arrested']:
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+            disconnect(request.sid)
+    except:
+        pass
+    if rl.frisk(iphash, 5):
+        sendWarn({"warn": "您发送了太多邀请，请稍后再试"})
+    else:
+        try:
+            emit('invite', data, to=getUserSid(to_nick, room))
+            emit('sendinvite', data, to=request.sid)
+        except:
+            sendWarn({"warn": "请检查您的命令格式。"})
 
 if __name__ == '__main__':
     eventlet.monkey_patch()
