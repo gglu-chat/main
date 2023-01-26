@@ -216,6 +216,8 @@ def handle_message(arg):
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+        else:
+            sendWarn({"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)

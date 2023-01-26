@@ -191,6 +191,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             dt.onlineUsers.forEach(item => {
                 var user = document.createElement('a');
                 user.textContent = item;
+
+                // 点击昵称发送邀请(此处点击比自己先进入聊天室的用户昵称有效，比自己后来的无效)
+                user.onclick = function(e){
+                    socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
+                }
     
                 var userLi = document.createElement('li');
                 userLi.appendChild(user);
@@ -217,7 +222,8 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var userLi = document.createElement('li');
         userLi.appendChild(user);
         users.appendChild(userLi);
-        // 点击昵称发送邀请
+        // 点击昵称发送邀请(此处点击比自己后进入聊天室的用户昵称有效，比自己先来的无效)
+        // 刚好和上面那个形成互补
         user.onclick = function(e){
             socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
         }        
@@ -397,7 +403,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.append('◆')
         span_box.append(rhombus)
         var text = document.createElement('p');
-        text.innerHTML = ` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`;
+        text.innerHTML = md.render(` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`)
         recvbox.appendChild(span_box);
         span_box.append(text)
         chatarea.insertBefore(recvbox, brick);
@@ -415,7 +421,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.append('◆')
         span_box.append(rhombus)
         var text = document.createElement('p');
-        text.innerHTML = ` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`;
+        text.innerHTML = md.render(` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`)
         span_box.append(text)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
