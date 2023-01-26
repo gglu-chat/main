@@ -165,10 +165,21 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
             if (!dt.iskicked){
+                var span_box = document.createElement('span');
+                var rhombus = document.createElement('a');
+                rhombus.classList.add('hint--bottom-right')
+                var date = new Date(dt.time);
+                rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+                rhombus.append('◆')
+                span_box.append(rhombus)
                 if (dt.onlineUsers.length == 0){
-                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
+                    span_box.append(` 在线的用户：${nick}`);
+                    recvbox.appendChild(span_box);
+                    chatarea.insertBefore(recvbox, brick);
                 } else {
-                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
+                    span_box.append(` 在线的用户：${dt.onlineUsers},${nick}`);
+                    recvbox.appendChild(span_box);
+                    chatarea.insertBefore(recvbox, brick);
                 }
             }
             chatarea.insertBefore(recvbox, brick)
