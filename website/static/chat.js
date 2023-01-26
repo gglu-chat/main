@@ -396,7 +396,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
-        span_box.innerHTML = md.render(` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`)
+        span_box.append(md.render(` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`))
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
     })
@@ -412,7 +412,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
-        span_box.innerHTML = md.render(` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`)
+        span_box.append(md.render(` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`))
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
     })
