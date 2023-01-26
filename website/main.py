@@ -256,7 +256,8 @@ def handle_invite(data):
         try:
             emit('invite', data, to=getUserSid(to_nick, room))
             emit('sendinvite', data, to=request.sid)
-        except:
+        # 如果邀请的用户在该聊天室不存在，getUserSid会报错`user_id`在赋值前被引用
+        except UnboundLocalError:
             sendWarn({"warn": "请检查您的命令格式。"})
 
 if __name__ == '__main__':
