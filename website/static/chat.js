@@ -195,10 +195,6 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
                 var userLi = document.createElement('li');
                 userLi.appendChild(user);
                 users.appendChild(userLi);
-                // 点击昵称发送邀请
-                user.onclick = function(e){
-                    socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
-                }
             });
         }
         var recvbox = document.createElement('div');
@@ -221,6 +217,10 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var userLi = document.createElement('li');
         userLi.appendChild(user);
         users.appendChild(userLi);
+        // 点击昵称发送邀请
+        user.onclick = function(e){
+            socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
+        }        
 
 
         document.getElementById("chatbox").onkeydown = function(event){
@@ -396,8 +396,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
-        var text = document.createElement('p');
-        text.innerHTML = ` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`;
+        span_box.innerHTML = ` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`;
         span_box.append(text)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
@@ -414,8 +413,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
         rhombus.append('◆')
         span_box.append(rhombus)
-        var text = document.createElement('p');
-        text.innerHTML = ` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`;
+        span_box.innerHTML = ` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`;
         span_box.append(text)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);
