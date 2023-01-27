@@ -407,6 +407,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         recvbox.appendChild(span_box);
         span_box.append(text)
         chatarea.insertBefore(recvbox, brick);
+        document.getElementById('notify').play();
     })
 
     socket.on('sendinvite', function(data){
