@@ -216,6 +216,8 @@ def handle_message(arg):
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+        else:
+            sendWarn({"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
@@ -233,6 +235,30 @@ def whisper(nick, text):
     room = user_dict[request.sid]['room']
     emit('whisper', arg, to=getUserSid(nick, room))
     emit('sendwmsg', arg, to=request.sid)
+
+@socketio.on('invite', namespace='/room')
+def handle_invite(data):
+    data['time'] = int(round(time.time() * 1000))
+    data['inviteRoom'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
+    data['from'] = user_dict[request.sid]['nick']
+    to_nick = data['to']
+    room = user_dict[request.sid]['room']
+    iphash = user_dict[request.sid]['hash']
+    try:
+        if rl.search(iphash)['arrested']:
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+            disconnect(request.sid)
+    except:
+        pass
+    if rl.frisk(iphash, 3):
+        sendWarn({"warn": "您发送了太多邀请，请稍后再试"})
+    else:
+        try:
+            emit('invite', data, to=getUserSid(to_nick, room))
+            emit('sendinvite', data, to=request.sid)
+        # 如果邀请的用户在该聊天室不存在，getUserSid会报错`user_id`在赋值前被引用
+        except UnboundLocalError:
+            sendWarn({"warn": "请检查您的命令格式。"})
 
 if __name__ == '__main__':
     eventlet.monkey_patch()
