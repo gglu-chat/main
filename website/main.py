@@ -250,7 +250,7 @@ def handle_invite(data):
             disconnect(request.sid)
     except:
         pass
-    if rl.frisk(iphash, 5):
+    if rl.frisk(iphash, 3):
         sendWarn({"warn": "您发送了太多邀请，请稍后再试"})
     else:
         try:
