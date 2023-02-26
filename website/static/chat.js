@@ -1,5 +1,5 @@
 /*
-    不用看啦我写得很烂q-q
+    在努力了在努力了q-q
 */
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
 var socket = io.connect(ws_url);
@@ -31,6 +31,7 @@ md = new remarkable.Remarkable('full', {
     }
 ).use(remarkable.linkify);
 
+// `?`开头的字都会被渲染成房间链接
 md.renderer.rules.text = function(tokens, idx) {
 	tokens[idx].content = remarkable.utils.escapeHtml(tokens[idx].content);
 
@@ -72,6 +73,7 @@ catch(e){
 }
 document.title = `?${myRoom} - gglu聊天室`;
 
+
 function getRandomString(length){
     var characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     var len = length;
@@ -93,6 +95,8 @@ function insertAtCursor(text) {
 	input.selectionStart = input.selectionEnd = before.length;
 }
 
+
+/*侧边栏部分*/
 const menuBtn = document.querySelector('#menu'),
 popup = document.querySelector('#onlineBox'),
 clearBtn = document.querySelector('#clear'),
@@ -147,6 +151,7 @@ if (notifySetting === true || notifySetting === 'true'){
     soundBox.checked = false
 }
 
+
 trip = 'NOTRIP'
 var msg_id = 'MSG_ID'
 if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
@@ -165,10 +170,21 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             recvbox.classList.add('info')
             var chatarea = document.getElementById('chatarea')
             if (!dt.iskicked){
+                var span_box = document.createElement('span');
+                var rhombus = document.createElement('a');
+                rhombus.classList.add('hint--bottom-right')
+                var date = new Date(dt.time);
+                rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+                rhombus.append('◆')
+                span_box.append(rhombus)
                 if (dt.onlineUsers.length == 0){
-                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${nick}`));
+                    span_box.append(` 在线的用户：${nick}`);
+                    recvbox.appendChild(span_box);
+                    chatarea.insertBefore(recvbox, brick);
                 } else {
-                    recvbox.appendChild(document.createTextNode(`◆ 在线的用户：${dt.onlineUsers},${nick}`));
+                    span_box.append(` 在线的用户：${dt.onlineUsers},${nick}`);
+                    recvbox.appendChild(span_box);
+                    chatarea.insertBefore(recvbox, brick);
                 }
             }
             chatarea.insertBefore(recvbox, brick)
@@ -176,11 +192,16 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             dt.onlineUsers.forEach(item => {
                 var user = document.createElement('a');
                 user.textContent = item;
+
+                // 点击昵称发送邀请(此处点击比自己先进入聊天室的用户昵称有效，比自己后来的无效)
+                user.onclick = function(e){
+                    socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
+                }
     
                 var userLi = document.createElement('li');
                 userLi.appendChild(user);
                 users.appendChild(userLi);
-            });    
+            });
         }
         var recvbox = document.createElement('div');
         recvbox.classList.add('info')
@@ -202,6 +223,11 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         var userLi = document.createElement('li');
         userLi.appendChild(user);
         users.appendChild(userLi);
+        // 点击昵称发送邀请(此处点击比自己后进入聊天室的用户昵称有效，比自己先来的无效)
+        // 刚好和上面那个形成互补
+        user.onclick = function(e){
+            socket.emit('invite', {"type": "invite", "to": e.target.innerHTML});
+        }        
 
 
         document.getElementById("chatbox").onkeydown = function(event){
@@ -361,6 +387,43 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         span_box.append(rhombus)
         var text = document.createElement('p');
         text.innerHTML = md.render(` 向${arg.to}私聊：${arg.text}`);
+        span_box.append(text)
+        recvbox.appendChild(span_box);
+        chatarea.insertBefore(recvbox, brick);
+    })
+
+    socket.on('invite', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(data.time);
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
+        var text = document.createElement('p');
+        text.innerHTML = md.render(` ${data.from} 邀请你去一个随机房间 ?${data.inviteRoom}`)
+        recvbox.appendChild(span_box);
+        span_box.append(text)
+        chatarea.insertBefore(recvbox, brick);
+        document.getElementById('notify').play();
+    })
+
+    socket.on('sendinvite', function(data){
+        var recvbox = document.createElement('div');
+        recvbox.classList.add('info');
+        var chatarea = document.getElementById('chatarea');
+        var span_box = document.createElement('span');
+        var rhombus = document.createElement('a');
+        rhombus.classList.add('hint--bottom-right')
+        var date = new Date(data.time);
+        rhombus.setAttribute('aria-label', `${date.toLocaleString()}`)
+        rhombus.append('◆')
+        span_box.append(rhombus)
+        var text = document.createElement('p');
+        text.innerHTML = md.render(` 你邀请 ${data.to} 去一个随机房间 ?${data.inviteRoom}`)
         span_box.append(text)
         recvbox.appendChild(span_box);
         chatarea.insertBefore(recvbox, brick);

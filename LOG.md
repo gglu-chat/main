@@ -1,5 +1,14 @@
 # Log
 
+[中文](https://blog.bujijam.ga/cn/gglu-chat-dev-log/)
+
+## v1.1.1 - 2023/2/26
+
+- **check message**
+- **added command**, `/listusers`
+- **added invite**, click nick in the sidebar to invite them to a random 8-chars room with sound notification, and add ratelimiter for inviting
+- added timestamp for join message
+
 ## v1.1.0 - 2023/1/16
 
 - added "do highlight for code"
