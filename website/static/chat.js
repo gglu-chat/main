@@ -1,5 +1,5 @@
 /*
-    不用看啦我写得很烂q-q
+    在努力了在努力了q-q
 */
 var ws_url = 'https://' + document.domain + ':' + location.port + '/room';
 var socket = io.connect(ws_url);
@@ -31,6 +31,7 @@ md = new remarkable.Remarkable('full', {
     }
 ).use(remarkable.linkify);
 
+// `?`开头的字都会被渲染成房间链接
 md.renderer.rules.text = function(tokens, idx) {
 	tokens[idx].content = remarkable.utils.escapeHtml(tokens[idx].content);
 

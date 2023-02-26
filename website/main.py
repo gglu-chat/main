@@ -11,7 +11,6 @@ import yaml
 from ratelimiter import RateLimiter
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, logger=True)
 salt = os.environ.get('SALT').encode()
 
@@ -141,6 +140,7 @@ def join(dt):
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
 
     # 检测该用户trip所属的标签并添加，再添加相应的等级
+    # Todo: trip为null的等级为0
     level = ''
     for k, v in levels.items():
         if trip in v:
@@ -289,6 +289,8 @@ def handle_invite(data):
     to_nick = data['to']
     room = user_dict[request.sid]['room']
     iphash = user_dict[request.sid]['hash']
+
+    # 依次判断是否被封禁与达到频率限制器阈值，否则发送
     try:
         if rl.search(iphash)['arrested']:
             sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
