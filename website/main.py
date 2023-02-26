@@ -37,6 +37,7 @@ all_commands = """**所有命令**：\n
 |/ban <昵称>|封禁目标用户|3|
 |/unban <哈希>|解除目标哈希的封禁|3|
 |/move <昵称> <房间(可选)>|将用户移动到随机/指定的房间。|3|
+|/listusers|列出全站所有用户|3|
 ***
 其余帮助：[gglu聊天室帮助文档](https://bujijam.ga/docs/help-for-gglu)
 """
@@ -48,6 +49,7 @@ def index():
 @app.route('/room')
 def chat():
     return render_template('chat.html')
+
 
 def getRoomUsers(room):
     """获取指定房间的用户"""
@@ -69,6 +71,34 @@ def getUserDetails(nick, room, type):
     for i in user_dict:
         if user_dict[i]['nick'] == nick and user_dict[i]['room'] == room:
             return user_dict[i][type]
+
+def listusers():
+    """列出所有房间的用户"""
+    # 初始化一个字典，用于存储所有房间的用户信息
+    room_users = {}
+
+    # 遍历所有用户，将他们加入到相应的房间中
+    for sid, user_info in user_dict.items():
+        room = user_info['room']
+        nick = user_info['nick']
+        trip = user_info['trip']
+
+        # 如果该房间还没有任何用户，将该房间初始化为空列表
+        if room not in room_users:
+            room_users[room] = []
+
+        # 将该用户的信息添加到该房间的用户列表中
+        user_str = '[%s]%s'%(trip, nick)
+        room_users[room].append(user_str)
+
+    # 构造一个字符串，用于表示所有房间的用户信息
+    result_str = ''
+    for room, users in room_users.items():
+        user_str = ', '.join(users)
+        result_str += '?%s: %s\n'%(room, user_str)
+
+    return result_str
+
 
 @socketio.on('connect', namespace='/room')
 def connect():
@@ -95,6 +125,7 @@ def join(dt):
     room = dt['room']
     password = dt['password']
     _time = int(round(time.time() * 1000))
+
     # 密码不为空时加密，为空时trip直接赋值'null'
     if password != '':
         sha256 = hashlib.sha256()
@@ -134,6 +165,7 @@ def join(dt):
     user_dict[request.sid]['level'] = level
     user_dict[request.sid]['hash'] = iphash
 
+
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
     arg = json.loads(str(json.dumps(arg)))
@@ -158,6 +190,7 @@ def handle_message(arg):
         pass
     if rl.frisk(iphash, score) or len(text) > 16384:
         sendWarn({"warn": "您发送了太多消息，请稍后再试"})
+
     # 聊天命令
     elif text[0] == '/':
         command = text.split(' ')[0]
@@ -170,6 +203,7 @@ def handle_message(arg):
                 whisper(target_user, wmsg)
             except:
                 sendWarn({"warn": "请检查您的命令格式"})
+
         elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
@@ -179,6 +213,7 @@ def handle_message(arg):
                     emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+
         elif command == '/ban' and level >= 3:
             try:
                 target_user = text.split(' ')[1]
@@ -191,6 +226,7 @@ def handle_message(arg):
                     disconnect(target_userid)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+
         elif command == '/unban' and level >= 3:
             try:
                 unban_hash = text.split(' ')[1]
@@ -198,6 +234,7 @@ def handle_message(arg):
                 emit('warn', {"warn": "已解除 %s 的封禁" %(unban_hash)}, to=room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+
         elif command == '/move' and level >= 3:
             try:
                 tg_nick = text.split(' ')[1]
@@ -216,13 +253,21 @@ def handle_message(arg):
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
+
+        elif command == '/listusers' and level >= 3:
+            try:
+                sendWarn({"warn": listusers()})
+            except:
+                sendWarn({"warn": "请检查您的命令格式。"})
         else:
             sendWarn({"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
+
     # 字数超过750或者行数超过25行时折叠消息，否则正常发送
     elif len(text) >= 750 or text.count('\n') >= 25:
         emit('foldmsg', arg, to=room)
     else:
         emit('send', arg, to=room)
+
 
 @socketio.on('warn', namespace='/room')
 def sendWarn(data):
