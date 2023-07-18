@@ -164,6 +164,9 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
     });
 
     socket.on('joinchat', function(dt){
+        if ((window.location.search.match(/^\?(.*)$/))[1] !== dt.room && !dt.iskicked){
+            socket.disconnect();
+        }
         if (dt.nick == nick){
             trip = dt.trip
             var recvbox = document.createElement('div');
