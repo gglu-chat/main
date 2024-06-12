@@ -60,7 +60,7 @@ class RateLimiter2:
             t = time.time() * 1000
             len_message = len(msg)
             line_count = self.lineCount(msg)
-            deltatime = t - last_time
+            deltatime = t - record['time']
             delta_score = min(750, (
                 5 * min(max((len_message + 10) - deltatime * self.max_char_per_ms, 0.0), 120.0) + 
                 1 * self.chars_per_line * line_count + 
@@ -69,7 +69,7 @@ class RateLimiter2:
             ))
             
             penalty = penalty * math.exp(-decay_rate * deltatime) + delta_score
-            last_time = t
+            record['time'] = t
             record['score'] = penalty
             record['time'] = time.time()
             if record['score'] > self.threshold:
