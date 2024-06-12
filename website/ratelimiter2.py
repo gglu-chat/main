@@ -14,7 +14,7 @@ class RateLimiter2:
     def lineCount(self, msg):
         """计算消息的行数
 
-        :param s: 指定的消息
+        :param msg: 指定的消息
         """
         strays = 0
         ans = 1
@@ -23,7 +23,7 @@ class RateLimiter2:
                 strays = 0
                 ans += 1
             elif msg[i] == '>' and (i == 0 or msg[i-1] == '\n'):
-                while i < len(s) and msg[i] == '>':
+                while i < len(msg) and msg[i] == '>':
                     ans += 2
                     i += 1
                 strays = 0
