@@ -11,30 +11,29 @@ class RateLimiter2:
         self.chars_per_line = chars_per_line
         self.max_char_per_ms = max_char_per_ms
 
-    def lineCount(self, s):
+        def lineCount(self, msg):
         """计算消息的行数
 
         :param s: 指定的消息
         """
         strays = 0
         ans = 1
-        for i in range(len(s)):
-            if s[i] == '\n':
+        for i in range(len(msg)):
+            if msg[i] == '\n':
                 strays = 0
                 ans += 1
-            elif s[i] == '>' and (i == 0 or s[i-1] == '\n'):
-                while i < len(s) and s[i] == '>':
+            elif msg[i] == '>' and (i == 0 or msg[i-1] == '\n'):
+                while i < len(s) and msg[i] == '>':
                     ans += 2
                     i += 1
                 strays = 0
                 i -= 1
             else:
                 strays += 1
-            if strays == 35 + 1:
+            if strays == self.chars_per_line + 1:
                 strays = 1
                 ans += 1
         return ans
-
 
     def search(self, id):
         """以id寻找当前惩罚积分
