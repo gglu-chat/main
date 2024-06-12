@@ -52,7 +52,7 @@ class RateLimiter2:
         :param msg: 用户所发消息
         """
         half_life = 40
-        decay_rate = math.log(2) / (half_life * 1000),
+        decay_rate = math.log(2) / (half_life * 1000)
         record = self.search(id)
         if 'arrested' in record and record['arrested']:
             return True
@@ -71,7 +71,6 @@ class RateLimiter2:
             self.penalty = self.penalty * math.exp(-decay_rate * deltatime) + delta_score
             record['time'] = t
             record['score'] = self.penalty
-            record['time'] = time.time()
             if record['score'] > self.threshold:
                 return True
         return False
