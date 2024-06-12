@@ -72,6 +72,10 @@ class RateLimiter2:
             record['time'] = t
             record['score'] = self.penalty
             if record['score'] > self.threshold:
+                if deltatime >= 120:
+                    record['score'] = self.threshold - 300
+                    record['time'] = time.time() * 1000
+                    return False
                 return True
         return False
 
