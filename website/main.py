@@ -7,7 +7,7 @@ import hashlib
 import base64
 import time
 import yaml
-from ratelimiter import RateLimiter
+from ratelimiter2 import RateLimiter2
 
 app = Flask(__name__)
 socketio = SocketIO(app, logger=True)
@@ -24,7 +24,7 @@ user_dict = {}
 
 ipsalt = os.urandom(32)
 
-rl = RateLimiter()
+rl2 = RateLimiter2()
 
 all_commands = """**所有命令**：\n
 |命令格式|说明|等级|
@@ -162,13 +162,13 @@ def join(dt):
         level = 1
     
     # 检测昵称是否重复
-    if (dt['nick'] not in getRoomUsers(room)) and (not rl.frisk(iphash, 0)):
+    if (dt['nick'] not in getRoomUsers(room)) and (not rl2.frisk(iphash, '0')):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash, "time": _time}, to=room)
     else:
         if dt['nick'] in getRoomUsers(room):
             sendWarn({"warn": "昵称已被占用"})
-        elif rl.frisk(iphash, 0):
+        elif rl2.frisk(iphash, '0'):
             sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
         disconnect()
     user_dict[request.sid] = {}
@@ -195,14 +195,13 @@ def handle_message(arg):
 
         # 判断消息是否满足频率限制
         iphash = user_dict[request.sid]['hash']
-        score = len(text)
         try:
-            if rl.search(iphash)['arrested']:
+            if rl2.search(iphash)['arrested']:
                 sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
                 disconnect(request.sid)
         except:
             pass
-        if rl.frisk(iphash, score) or len(text) > 16384:
+        if rl2.frisk(iphash, text) or len(text) > 16384:
             sendWarn({"warn": "您发送了太多消息，请稍后再试"})
 
         # 聊天命令
@@ -234,7 +233,7 @@ def handle_message(arg):
                     target_userid = getUserSid(target_user, room)
                     target_hash = getUserDetails(target_user, room, 'hash')
                     if level > user_dict[target_userid]['level']:
-                        rl.arrest(target_hash, target_hash)
+                        rl2.arrest(target_hash, target_hash)
                         emit('warn', {"warn": "%s 封禁了 %s ，用户哈希：%s" %(user_dict[request.sid]['nick'], target_user, target_hash)}, to=room)
                         emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"}, to=target_userid)
                         disconnect(target_userid)
@@ -244,7 +243,7 @@ def handle_message(arg):
             elif command == '/unban' and level >= 3:
                 try:
                     unban_hash = text.split(' ')[1]
-                    rl.pardon(unban_hash)
+                    rl2.pardon(unban_hash)
                     emit('warn', {"warn": "已解除 %s 的封禁" %(unban_hash)}, to=room)
                 except:
                     sendWarn({"warn": "请检查您的命令格式。"})
@@ -308,12 +307,12 @@ def handle_invite(data):
 
     # 依次判断是否被封禁与达到频率限制器阈值，否则发送
     try:
-        if rl.search(iphash)['arrested']:
+        if rl2.search(iphash)['arrested']:
             sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
             disconnect(request.sid)
     except:
         pass
-    if rl.frisk(iphash, 3):
+    if rl2.frisk(iphash, '3'):
         sendWarn({"warn": "您发送了太多邀请，请稍后再试"})
     else:
         try:
