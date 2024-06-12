@@ -2,16 +2,14 @@ import time
 import math
 
 class RateLimiter2:
-    def __init__(self, records=None, threshold=1500, hashes=None, penalty=0,
+    def __init__(self, records=None, threshold=1500, hashes=None, 
                  chars_per_line=35, max_char_per_ms=0.0025, half_life = 40):
         self.records = records if records is not None else {}
         self.threshold = threshold
         self.hashes = hashes if hashes is not None else {}
-        self.penalty = penalty
         self.chars_per_line = chars_per_line
         self.max_char_per_ms = max_char_per_ms
-        self.half_life = half_life
-        self.decay_rate = math.log(2) / (self.half_life * 1000)
+        self.decay_rate = math.log(2) / (half_life * 1000)
 
     def lineCount(self, msg):
         """计算消息的行数
@@ -68,8 +66,7 @@ class RateLimiter2:
                 10 * max((6 - delta_time * 0.001), 0.0) * (6 - delta_time * 0.001)
             ))
                 
-            self.penalty = self.penalty * math.exp(-self.decay_rate * delta_time) + delta_score
-            record['score'] = self.penalty
+            record['score'] = record['score'] * math.exp(-self.decay_rate * delta_time) + delta_score
             
             if record['score'] > self.threshold:
                 if delta_time < 120000:
