@@ -11,7 +11,7 @@ class RateLimiter2:
         self.chars_per_line = chars_per_line
         self.max_char_per_ms = max_char_per_ms
 
-        def lineCount(self, msg):
+    def lineCount(self, msg):
         """计算消息的行数
 
         :param s: 指定的消息
