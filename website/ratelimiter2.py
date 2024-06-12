@@ -3,7 +3,7 @@ import math
 
 class RateLimiter2:
     def __init__(self, records=None, threshold=1500, hashes=None, penalty=0,
-                 chars_per_line=35, max_char_per_ms=0.004):
+                 chars_per_line=35, max_char_per_ms=0.0025):
         self.records = records if records is not None else {}
         self.threshold = threshold
         self.hashes = hashes if hashes is not None else {}
@@ -68,9 +68,9 @@ class RateLimiter2:
                 10 * max((6 - deltatime * 0.001), 0.0) * (6 - deltatime * 0.001)
             ))
             
-            penalty = penalty * math.exp(-decay_rate * deltatime) + delta_score
+            self.penalty = self.penalty * math.exp(-decay_rate * deltatime) + delta_score
             record['time'] = t
-            record['score'] = penalty
+            record['score'] = self.penalty
             record['time'] = time.time()
             if record['score'] > self.threshold:
                 return True
