@@ -42,7 +42,7 @@ class RateLimiter2:
         :param id: 指定的 sid / hash
         """
         if id not in self.records:
-            self.records[id] = {'time': time.time(), 'score': 0}
+            self.records[id] = {'time': time.time() * 1000, 'score': 0}
         return self.records[id]
 
     def frisk(self, id, msg):
