@@ -207,6 +207,9 @@ def handle_message(arg):
     if rl2.frisk(iphash, text) or len(text) > 16384:
         sendWarn({"warn": "您发送了太多消息，请稍后再试。"})
 
+    elif(text.count(' ') + text.count('　') + text.count('\n') == len(text)):
+        return
+
     # 聊天命令
     elif text[0] == '/':
         command = text.split(' ')[0]
