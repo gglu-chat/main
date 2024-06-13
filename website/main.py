@@ -181,7 +181,10 @@ def join(dt):
 
 @socketio.on('message', namespace='/room')
 def handle_message(arg):
-    if check_message(arg):
+    if not check_message(arg):
+        disconnect(request.sid)
+        return
+    else:
         arg = json.loads(str(json.dumps(arg)))
         arg['time'] = int(round(time.time() * 1000))
         arg['msg_id'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(16))
@@ -280,9 +283,6 @@ def handle_message(arg):
             emit('foldmsg', arg, to=room)
         else:
             emit('send', arg, to=room)
-    else:
-        disconnect(request.sid)
-
 
 @socketio.on('warn', namespace='/room')
 def sendWarn(data):
