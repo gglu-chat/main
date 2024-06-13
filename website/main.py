@@ -298,14 +298,7 @@ def whisper(nick, text):
 
 @socketio.on('invite', namespace='/room')
 def handle_invite(data):
-    data['time'] = int(round(time.time() * 1000))
-    data['inviteRoom'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
-    data['from'] = user_dict[request.sid]['nick']
-    to_nick = data['to']
-    room = user_dict[request.sid]['room']
     iphash = user_dict[request.sid]['hash']
-
-    # 依次判断是否被封禁与达到频率限制器阈值，否则发送
     try:
         if rl2.search(iphash)['arrested']:
             sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
@@ -314,13 +307,20 @@ def handle_invite(data):
         pass
     if rl2.frisk(iphash, '123456789012 邀请你去一个随机房间 ?abcdefgh'):
         sendWarn({"warn": "您发送了太多邀请，请稍后再试。"})
-    else:
-        try:
-            emit('invite', data, to=getUserSid(to_nick, room))
-            emit('sendinvite', data, to=request.sid)
+        return
+    
+    data['time'] = int(round(time.time() * 1000))
+    data['inviteRoom'] = ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABSCEFGHIJKLMNOPQRSTUVWXYZ0123456789') for i in range(8))
+    data['from'] = user_dict[request.sid]['nick']
+    to_nick = data['to']
+    room = user_dict[request.sid]['room']
+
+    try:
+        emit('invite', data, to=getUserSid(to_nick, room))
+        emit('sendinvite', data, to=request.sid)
         # 如果邀请的用户在该聊天室不存在，getUserSid会报错`user_id`在赋值前被引用
-        except UnboundLocalError:
-            sendWarn({"warn": "请检查您的命令格式。"})
+    except UnboundLocalError:
+        sendWarn({"warn": "请检查您的命令格式。"})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 15264))
