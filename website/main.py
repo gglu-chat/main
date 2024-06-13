@@ -167,9 +167,9 @@ def join(dt):
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room), "hash": iphash, "time": _time}, to=room)
     else:
         if dt['nick'] in getRoomUsers(room):
-            sendWarn({"warn": "昵称已被占用"})
+            sendWarn({"warn": "昵称已被占用。"})
         elif rl2.frisk(iphash, '0'):
-            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
         disconnect()
     user_dict[request.sid] = {}
     user_dict[request.sid]['nick'] = nick
@@ -197,12 +197,12 @@ def handle_message(arg):
         iphash = user_dict[request.sid]['hash']
         try:
             if rl2.search(iphash)['arrested']:
-                sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+                sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
                 disconnect(request.sid)
         except:
             pass
         if rl2.frisk(iphash, text) or len(text) > 16384:
-            sendWarn({"warn": "您发送了太多消息，请稍后再试"})
+            sendWarn({"warn": "您发送了太多消息，请稍后再试。"})
 
         # 聊天命令
         elif text[0] == '/':
@@ -215,7 +215,7 @@ def handle_message(arg):
                 try:
                     whisper(target_user, wmsg)
                 except:
-                    sendWarn({"warn": "请检查您的命令格式"})
+                    sendWarn({"warn": "请检查您的命令格式。"})
 
             elif command == '/kick' and level >= 3:
                 try:
@@ -244,7 +244,7 @@ def handle_message(arg):
                 try:
                     unban_hash = text.split(' ')[1]
                     rl2.pardon(unban_hash)
-                    emit('warn', {"warn": "已解除 %s 的封禁" %(unban_hash)}, to=room)
+                    emit('warn', {"warn": "已解除 %s 的封禁。" %(unban_hash)}, to=room)
                 except:
                     sendWarn({"warn": "请检查您的命令格式。"})
 
@@ -260,7 +260,7 @@ def handle_message(arg):
                     if level > tg_level:
                         leave_room(room, sid=tg_sid)
                         emit('leavechat', {'type': 'leave', 'sid': tg_nick, 'nick': tg_nick}, to=room)
-                        emit('warn', {"warn": "已将 %s 移动到了 ?%s 聊天室" %(tg_nick, tg_room)}, to=room)
+                        emit('warn', {"warn": "已将 %s 移动到了 ?%s 聊天室。" %(tg_nick, tg_room)}, to=room)
                         join_room(tg_room, sid=tg_sid)
                         user_dict[tg_sid]['room'] = tg_room
                         emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
@@ -275,8 +275,8 @@ def handle_message(arg):
             else:
                 sendWarn({"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
 
-        # 字数超过750或者行数超过25行时折叠消息，否则正常发送
-        elif len(text) >= 750 or text.count('\n') >= 25:
+        # 行数超过25行时折叠消息，否则正常发送
+        elif rl2.lineCount(text) >= 25:
             emit('foldmsg', arg, to=room)
         else:
             emit('send', arg, to=room)
@@ -308,12 +308,12 @@ def handle_invite(data):
     # 依次判断是否被封禁与达到频率限制器阈值，否则发送
     try:
         if rl2.search(iphash)['arrested']:
-            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)"})
+            sendWarn({"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
             disconnect(request.sid)
     except:
         pass
-    if rl2.frisk(iphash, '3'):
-        sendWarn({"warn": "您发送了太多邀请，请稍后再试"})
+    if rl2.frisk(iphash, '123456789012 邀请你去一个随机房间 ?abcdefgh'):
+        sendWarn({"warn": "您发送了太多邀请，请稍后再试。"})
     else:
         try:
             emit('invite', data, to=getUserSid(to_nick, room))
