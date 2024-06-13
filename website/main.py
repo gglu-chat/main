@@ -222,7 +222,7 @@ def handle_message(arg):
 
         elif command == '/kick' and level >= 3:
             try:
-                target_nick = text.split(' ')[1] #
+                target_nick = text.split(' ')[1]
                 target_sid = getUserSid(target_nick, room)
                 if level > user_dict[target_sid]['level']:
                     disconnect(target_sid)
@@ -232,7 +232,7 @@ def handle_message(arg):
 
         elif command == '/ban' and level >= 3:
             try:
-                target_user = text.split(' ')[1] #
+                target_user = text.split(' ')[1]
                 target_userid = getUserSid(target_user, room)
                 target_hash = getUserDetails(target_user, room, 'hash')
                 if level > user_dict[target_userid]['level']:
@@ -245,7 +245,7 @@ def handle_message(arg):
 
         elif command == '/unban' and level >= 3:
             try:
-                unban_hash = text.split(' ')[1] #
+                unban_hash = text.split(' ')[1]
                 rl2.pardon(unban_hash)
                 emit('warn', {"warn": "已解除 %s 的封禁。" %(unban_hash)}, to=room)
             except:
@@ -275,13 +275,13 @@ def handle_message(arg):
                 sendWarn({"warn": listusers()})
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
-        else: #
+        else:
             sendWarn({"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
 
     # 行数超过25行时折叠消息，否则正常发送
     elif rl2.lineCount(text) >= 25:
         emit('foldmsg', arg, to=room)
-    else: #
+    else:
         emit('send', arg, to=room)
 
 @socketio.on('warn', namespace='/room')
