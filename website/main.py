@@ -44,6 +44,10 @@ all_commands = """**所有命令**：\n
 def index():
     return render_template('index.html')
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
 @app.route('/room')
 def chat():
     return render_template('chat.html')
