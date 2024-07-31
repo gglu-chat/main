@@ -37,7 +37,7 @@ all_commands = """**所有命令**：\n
 |/move <昵称> <房间(可选)>|将用户移动到随机/指定的房间。|3|
 |/listusers|列出全站所有用户|3|
 ***
-其余帮助：[gglu聊天室帮助文档](https://bujijam.ga/docs/help-for-gglu)
+其余帮助：[gglu聊天室帮助文档](https://bujijam.us.kg/docs/help-for-gglu)
 """
 
 @app.route('/')

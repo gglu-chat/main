@@ -1,6 +1,6 @@
 # Log
 
-[中文](https://blog.bujijam.ga/cn/gglu-chat-dev-log/)
+[中文](https://blog.bujijam.us.kg/cn/gglu-chat-dev-log/)
 
 ## v1.1.1 - 2023/2/26
 
