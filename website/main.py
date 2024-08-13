@@ -10,7 +10,7 @@ import yaml
 from ratelimiter2 import RateLimiter2
 
 app = Flask(__name__)
-socketio = SocketIO(app, logger=True)
+socketio = SocketIO(app, logger=True, engineio_logger=True)
 SALT = os.environ.get('SALT').encode()
 IPSALT = os.urandom(32)
 
