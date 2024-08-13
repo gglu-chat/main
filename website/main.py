@@ -11,22 +11,21 @@ from ratelimiter2 import RateLimiter2
 
 app = Flask(__name__)
 socketio = SocketIO(app, logger=True)
-salt = os.environ.get('SALT').encode()
+SALT = os.environ.get('SALT').encode()
+IPSALT = os.urandom(32)
 
 # 读取配置文件
 with open('/app/website/static/config.yaml', 'r', encoding='utf-8') as file:
     config = yaml.load(file, Loader=yaml.CLoader)
     # 各等级所对应的trip
-    levels = config['levels']
+    LEVELS = config['levels']
 
 # 存放用户信息（nick,room,trip,level,hash）
 user_dict = {}
 
-ipsalt = os.urandom(32)
-
 rl2 = RateLimiter2()
 
-all_commands = """**所有命令**：\n
+ALL_COMMANDS = """**所有命令**：\n
 |命令格式|说明|等级|
 |:--------:|:----:|:----:|
 |/help、/h|查看所有命令|1|
@@ -39,19 +38,6 @@ all_commands = """**所有命令**：\n
 ***
 其余帮助：[gglu聊天室帮助文档](https://bujijam.us.kg/docs/help-for-gglu)
 """
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html'), 404
-
-@app.route('/room')
-def chat():
-    return render_template('chat.html')
-
 
 def getRoomUsers(room):
     """获取指定房间的用户"""
@@ -74,7 +60,7 @@ def getUserDetails(nick, room, type):
         if user_dict[i]['nick'] == nick and user_dict[i]['room'] == room:
             return user_dict[i][type]
 
-def listusers():
+def listUsers():
     """列出所有房间的用户"""
     # 初始化一个字典，用于存储所有房间的用户信息
     room_users = {}
@@ -116,15 +102,29 @@ def check_message(msg):
     return True
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@app.route('/room')
+def chat():
+    return render_template('chat.html')
+
+
 @socketio.on('connect', namespace='/room')
 def connect():
     emit('connected', {'info': 'connected:D', 'sid': request.sid})
 
 @socketio.on('disconnect', namespace='/room')
 def disconnects():
-    # 断开连接时触发leave事件
-    leave(user_dict[request.sid]['room'])
-    user_dict.pop(request.sid)
+    if request.sid in user_dict:
+        # 断开连接时触发leave事件
+        leave(user_dict[request.sid]['room'])
+        user_dict.pop(request.sid)
 
 @socketio.on('leave', namespace='/room')
 def leave(datas):
@@ -145,7 +145,7 @@ def join(dt):
     # 密码不为空时加密，为空时trip直接赋值'null'
     if password != '':
         sha256 = hashlib.sha256()
-        sha256.update(password.encode() + salt)
+        sha256.update(password.encode() + SALT)
         trip = base64.b64encode(sha256.digest()).decode('utf-8')[0:6]
     else:
         trip = 'null'
@@ -153,13 +153,13 @@ def join(dt):
     # 通过xff头来获取ip并加密
     ip = (request.headers.getlist("X-Forwarded-For")[0]).split(',')[0]
     sha256 = hashlib.sha256()
-    sha256.update(ip.encode() + ipsalt)
+    sha256.update(ip.encode() + IPSALT)
     iphash = base64.b64encode(sha256.digest()).decode('utf-8')[0:15]
 
     # 检测该用户trip所属的标签并添加，再添加相应的等级
     # Todo: trip为null的等级为0
     level = ''
-    for k, v in levels.items():
+    for k, v in LEVELS.items():
         if trip in v:
             level = k
     if not level:
@@ -218,7 +218,7 @@ def handle_message(arg):
     elif text[0] == '/':
         command = text.split(' ')[0]
         if command == '/h' or command == '/help':
-            sendWarn({"warn": all_commands})
+            sendWarn({"warn": ALL_COMMANDS})
         elif command == '/w' or command == '/whisper':
             target_user = text.split(' ')[1]
             wmsg = ' '.join(text.split(' ')[2:])
@@ -279,7 +279,7 @@ def handle_message(arg):
 
         elif command == '/listusers' and level >= 3:
             try:
-                sendWarn({"warn": listusers()})
+                sendWarn({"warn": listUsers()})
             except:
                 sendWarn({"warn": "请检查您的命令格式。"})
         else:
