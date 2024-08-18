@@ -1,31 +1,56 @@
 # Log
 
-[中文](https://blog.bujijam.us.kg/cn/gglu-chat-dev-log/)
+## v1.1.3 - 2024/8/18
+
++ 新增404页面
++ **添加纯空格消息检测**
+* 优化消息处理逻辑等，优化可读性
+* 更新折叠和邀请频率限制逻辑
+* **更新频率限制器**，ratelimiter2.py
+* 更新依赖版本
+
+## v1.1.2 - 2023/7/18
+
++ **增加房间检测**，在地址栏网址中的房间名与实际加入的房间不一致（通常是`move`导致），而消息中又没有`iskicked`时，断开连接 [我忘了当时这样写是为什么]
 
 ## v1.1.1 - 2023/2/26
 
-- **check message**
-- **added command**, `/listusers`
-- **added invite**, click nick in the sidebar to invite them to a random 8-chars room with sound notification, and add ratelimiter for inviting
-- added timestamp for join message
++ **增加消息检查**，检查消息是否为json，消息内容是否为字符串
++ **增加聊天命令**, `/listusers`
++ **增加邀请功能**, 点击侧边栏的昵称将其邀请到八个随机字母的房间，并且播放提示音；增加邀请的频率限制器
++ 为加入消息增添时间戳
 
 ## v1.1.0 - 2023/1/16
 
-- added "do highlight for code"
-- **added commands**, `/help`, `/whisper`, `/kick`, `/ban`, `/unban`, `/move`
-- added users level, 1-4
-- added "fold message", fold message if text length exceeds 750 or the number of lines exceeds 25
-- added sidebar, include clear all message, yinjian mode, sound notifications setting, more settings
-- **added ratelimiter**, iphash-based
-- **added rooms**, create your own room by changing the text after `room?`, join a random room if there is nothing after `room`. e.g. `room?your-room`
++ 增加加入/退出/发送私聊/收到私聊的时间戳
++ 为管理员、站长增加星星标记
++ 增加代码高光样式 [highlight.js]
++ **增加聊天命令**，`/help`, `/whisper`, `/kick`, `/ban`, `/unban`, `/move`
++ 增加用户等级，1-4分别为用户，成员，管理员，站长
++ 增加“折叠消息”，当字数超过750或行数超过25时消息将被折叠
++ 增加侧边栏，包括清空所有消息，阴间模式，提示音设置，更多设置，在线列表
++ **增加频率限制器**，基于hash
++ **增加“多房间”**，您可以通过在url中输入或改变`room?房间名`来创建自己的聊天室。当`room`后没有参数时，您将进入一个随机房间
 
 ## v1.0.1 - 2022/10/23
 
-- added "click nick to @" and sound notification
-- added nick storage
-- added markdown support
++ 增加“点击昵称@对方”
++ 增加“@”的提示音
++ 增加昵称存储 [再也不用每次加入都要填写昵称和密码啦（]
++ 增加markdown支持 [使用remarkable.js]
 
 ## v1.0.0 - 2022/10/15
 
-- **fixed "multiple join messages after reconnection" bug**
-- better looking trip and time display
+* 修复“重连后出现多条加入信息”bug
+* 更美观的trip和时间展示
+
+在v1.0.0正式发布之前，还增加/更改/删除/修复了（按时间降序排列）：
+
++ 保持滚动条底部
++ css大变动，更好看的UI。
+* 改用hint.css显示trip和时间
+* 更改字体，添加icon
+* 修复“多重消息（聊天室内新加入几个用户，消息就会重复几次）”bug [不知道是什么问题但解决了（]
+* 修复”trip会变为同一个（所有用户的trip变为新加入的用户的trip）”bug [trip覆写问题]
+* 修复”无trip无法加入”bug [密码为空导致的问题]
+- 删除“发送”按钮，改为按回车键发送
