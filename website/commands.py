@@ -1,6 +1,6 @@
 import random
 from flask_socketio import emit, disconnect, join_room, leave_room
-from utils import getUserSid, getUserDetails, getRoomUsers
+from utils import getUserSid, getUserDetails, getRoomUsers, listUsers
 
 ALL_COMMANDS = """**所有命令**：\n
 |命令格式|说明|等级|
@@ -80,3 +80,10 @@ def handle_command(text, level, room, user_dict, request, rl2):
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room, user_dict), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
+        elif command == '/listusers' and level >= 3:
+            try:
+                emit("warn", {"warn": listUsers(user_dict)})
+            except:
+                emit("warn", {"warn": "请检查您的命令格式。"})
+        else:
+            emit("warn", {"warn": "请检查您的命令格式。发送`/help`查看所有命令。"})
