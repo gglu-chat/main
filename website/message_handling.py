@@ -60,10 +60,12 @@ def handleWhisper(request, nick, text, user_dict):
 
 def handleInvite(request, data, user_dict, rl2):
     iphash = user_dict[request.sid]['hash']
-    if rl2.search(iphash)['arrested']:
-        emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或站长。"})
-        disconnect(request.sid)
-        return
+    try:
+        if rl2.search(iphash)['arrested']:
+            emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或站长。"})
+            disconnect(request.sid)
+    except:
+        pass
     
     if rl2.frisk(iphash, '123456789012 邀请你去一个随机房间 ?abcdefgh'):
         emit("warn", {"warn": "您发送了太多邀请，请稍后再试。"})
