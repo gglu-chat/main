@@ -2,7 +2,7 @@ import time
 import hashlib
 import base64
 from flask_socketio import emit, join_room, leave_room, disconnect
-from utils import getRoomUsers, getUserSid
+from utils import getRoomUsers
 import json, os
 
 SALT = os.environ.get('SALT').encode()
@@ -77,5 +77,5 @@ def handleJoinError(nick, room, user_dict, rl2, iphash):
     if nick in getRoomUsers(room, user_dict):
         emit('warn', {"warn": "昵称已被占用。"})
     elif rl2.frisk(iphash, '0'):
-        emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
+        emit('warn', {"warn": "您已经被封禁。有任何疑问请联系管理员或站长。"})
     disconnect()

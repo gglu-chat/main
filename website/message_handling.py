@@ -25,7 +25,7 @@ def handleMsg(request, arg, user_dict, rl2):
     iphash = user_dict[request.sid]['hash']
     try:
         if rl2.search(iphash)['arrested']:
-            emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
+            emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或站长。"})
             disconnect(request.sid)
     except:
         pass
@@ -61,7 +61,7 @@ def handleWhisper(request, nick, text, user_dict):
 def handleInvite(request, data, user_dict, rl2):
     iphash = user_dict[request.sid]['hash']
     if rl2.search(iphash)['arrested']:
-        emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或[站长](mailto://bujijam@qq.com/)。"})
+        emit("warn", {"warn": "您已经被封禁。有任何疑问请联系管理员或站长。"})
         disconnect(request.sid)
         return
     

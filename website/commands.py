@@ -20,8 +20,10 @@ def handle_command(text, level, room, user_dict, request, rl2):
     # 聊天命令
     if text[0] == '/':
         command = text.split(' ')[0]
+        # 帮助
         if command == '/h' or command == '/help':
             emit("warn", {"warn": ALL_COMMANDS})
+        # 私信
         elif command == '/w' or command == '/whisper':
             target_user = text.split(' ')[1]
             wmsg = ' '.join(text.split(' ')[2:])
@@ -30,7 +32,7 @@ def handle_command(text, level, room, user_dict, request, rl2):
                 handleWhisper(request, target_user, wmsg, user_dict)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
-
+        # 踢出用户
         elif command == '/kick' and level >= 3:
             try:
                 target_nick = text.split(' ')[1]
@@ -40,7 +42,7 @@ def handle_command(text, level, room, user_dict, request, rl2):
                     emit('warn', {"warn": "已将 %s 断开连接。" %(target_nick)}, to=room)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
-
+        # 封禁用户
         elif command == '/ban' and level >= 3:
             try:
                 target_user = text.split(' ')[1]
@@ -53,7 +55,7 @@ def handle_command(text, level, room, user_dict, request, rl2):
                     disconnect(target_userid)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
-
+        # 解封用户
         elif command == '/unban' and level >= 3:
             try:
                 unban_hash = text.split(' ')[1]
@@ -61,7 +63,7 @@ def handle_command(text, level, room, user_dict, request, rl2):
                 emit('warn', {"warn": "已解除 %s 的封禁。" %(unban_hash)}, to=room)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
-
+        # 移动用户
         elif command == '/move' and level >= 3:
             try:
                 tg_nick = text.split(' ')[1]
@@ -80,6 +82,7 @@ def handle_command(text, level, room, user_dict, request, rl2):
                     emit('joinchat', {"type": "join", "nick": tg_nick, "trip": user_dict[tg_sid]['trip'], "level": tg_level, "room": tg_room, "onlineUsers": getRoomUsers(tg_room, user_dict), "hash": user_dict[tg_sid]['hash'], "iskicked": "True"}, to=tg_room)
             except:
                 emit("warn", {"warn": "请检查您的命令格式。"})
+        # 查看所有用户
         elif command == '/listusers' and level >= 3:
             try:
                 emit("warn", {"warn": listUsers(user_dict)})
