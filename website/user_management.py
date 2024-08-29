@@ -47,9 +47,9 @@ def handleUserJoin(request, dt, user_dict, rl2, config):
     if (nick not in getRoomUsers(room, user_dict)) and (not rl2.frisk(iphash, '0')):
         join_room(room)
         emit('joinchat', {"type": "join", "nick": nick, "trip": trip, "level": level, "room": room, "onlineUsers": getRoomUsers(room, user_dict), "hash": iphash, "time": _time}, to=room)
+        user_dict[request.sid] = {"nick": nick, "room": room, "trip": trip, "level": level, "hash": iphash}
     else:
         handleJoinError(nick, room, user_dict, rl2, iphash)
-    user_dict[request.sid] = {"nick": nick, "room": room, "trip": trip, "level": level, "hash": iphash}
 
 
 def createTrip(password):
