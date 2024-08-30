@@ -214,7 +214,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             var rhombus = document.createElement('a');
             rhombus.classList.add('hint--bottom-right')
             var date = new Date(dt.time)
-            rhombus.setAttribute('aria-label', `trip:${dt.trip}\n${date.toLocaleString()}`)
+            rhombus.setAttribute('aria-label', `${dt.trip}\n${date.toLocaleString()}`)
             rhombus.append('◆')
             span_box.append(rhombus)
             span_box.append(` ${dt.nick} 加入聊天室`)
@@ -258,7 +258,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
             nick_box.classList.add('nick')
             nick_box.classList.add('hint--bottom-right')
             var date = new Date(arg.time)
-            nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
+            nick_box.setAttribute('aria-label', `${arg.trip}\n${date.toLocaleString()}`)
             var your_nick = document.createTextNode(arg.mynick);
             nick_box.append(your_nick)
             if (arg.level >= 3){
@@ -328,7 +328,7 @@ if (nick !== null && nick.match(/^[a-zA-Z0-9_]{1,12}$/)){
         nick_box.classList.add('nick')
         nick_box.classList.add('hint--bottom-right')
         var date = new Date(arg.time)
-        nick_box.setAttribute('aria-label', `trip:${arg.trip}\n${date.toLocaleString()}`)
+        nick_box.setAttribute('aria-label', `${arg.trip}\n${date.toLocaleString()}`)
         var your_nick = document.createTextNode(arg.mynick);
         nick_box.append(your_nick)
 
