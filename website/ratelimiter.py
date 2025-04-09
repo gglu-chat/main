@@ -1,3 +1,4 @@
+"""此频率限制其已弃用，使用ratelimiter2"""
 import time
 import math
 

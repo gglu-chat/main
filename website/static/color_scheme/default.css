@@ -12,7 +12,7 @@ a:hover {
     text-decoration: underline dotted #2f4f4f;
 }
 .nick {
-    color: #2f4f4f;
+    color: #8b72a0;
 }
 ::selection {
     background-color: #8592a6d1;
@@ -21,7 +21,8 @@ a:hover {
     color: #d38a40;
 }
 .info {
-    color: #516884
+    color: #699193;
+    font-weight: bold;
 }
 .show {
     background-color: rgb(240, 248, 255, .7);
